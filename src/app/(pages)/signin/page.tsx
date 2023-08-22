@@ -59,7 +59,7 @@ export default function SignInPage() {
   return isAuthenticated ? (
     <Spinner />
   ) : (
-    <AuthContainer title="Sign Up">
+    <AuthContainer title="Login">
       <form onSubmit={handleSubmit(onSubmit)}>
         <Input
           {...register('email', { required: true })}
