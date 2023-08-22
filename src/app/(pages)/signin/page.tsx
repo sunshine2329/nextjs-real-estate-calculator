@@ -17,22 +17,23 @@ type TFormValues = {
 }
 
 const resolver: Resolver<TFormValues> = async values => {
+  const errors: { [key: string]: any } = {}
+  if (!values.email) {
+    errors['email'] = { type: 'required', message: 'This is required.' }
+  }
+  if (!values.password || values.password.length < 6) {
+    errors['password'] = { type: 'required', message: 'This is required.' }
+  }
   return {
     values,
-    errors: {
-      email: !values.email ? { type: 'required', message: 'This is required.' } : {},
-      password:
-        !values.password || values.password.length < 6
-          ? { type: 'required', message: 'Password should be 6 length at least' }
-          : {}
-    }
+    errors
   }
 }
 
 export default function SignInPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated, setAuthStatus } = useAuth()
   const {
     register,
     handleSubmit,
@@ -43,7 +44,7 @@ export default function SignInPage() {
       setLoading(true)
       const response = await axios.post('/api/users/login', data)
       console.log('Login success', response.data)
-      router.push('/profile')
+      setAuthStatus(true)
     } catch (error: any) {
       console.log('Login failed', error.message)
       toast.error(error.message)

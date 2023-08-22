@@ -9,7 +9,7 @@ const LogoutPage = () => {
   const { setAuthStatus } = useAuth()
   useEffect(() => {
     setAuthStatus(false)
-    router.replace('/')
+    router.replace('/signin')
   }, [])
   return <h1 className="m-auto w-full h-full">Logging out...</h1>
 }

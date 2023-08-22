@@ -18,17 +18,19 @@ type TFormValues = {
 }
 
 const resolver: Resolver<TFormValues> = async values => {
-  console.log(values)
+  const errors: { [key: string]: any } = {}
+  if (!values.username) {
+    errors['username'] = { type: 'required', message: 'This is required.' }
+  }
+  if (!values.email) {
+    errors['email'] = { type: 'required', message: 'This is required.' }
+  }
+  if (!values.password || values.password.length < 6) {
+    errors['password'] = { type: 'required', message: 'This is required.' }
+  }
   return {
     values,
-    errors: {
-      username: !values.username ? { type: 'required', message: 'This is required.' } : {},
-      email: !values.email ? { type: 'required', message: 'This is required.' } : {},
-      password:
-        !values.password || values.password.length < 6
-          ? { type: 'required', message: 'Password should be 6 length at least' }
-          : {}
-    }
+    errors
   }
 }
 
@@ -42,7 +44,6 @@ export default function SignUpPage() {
     formState: { errors }
   } = useForm<TFormValues>({ resolver })
   const onSubmit: SubmitHandler<TFormValues> = async data => {
-    console.log(data)
     try {
       setLoading(true)
       const response = await axios.post('/api/users/signup', data)
