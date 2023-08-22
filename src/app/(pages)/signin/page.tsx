@@ -3,11 +3,13 @@
 // import useAuth from '@/context/useAuth'
 // import Link from 'next/link'
 // import { useRouter } from 'next/navigation'
-import { AuthContainer, Button, Input } from '@/components'
+import { AuthContainer, Button, Input, Spinner } from '@/components'
 import useAuth from '@/context/useAuth'
+import axios from 'axios'
 import { useRouter } from 'next/navigation'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm, Resolver, SubmitHandler } from 'react-hook-form'
+import { toast } from 'react-hot-toast'
 
 type TFormValues = {
   email: string
@@ -29,14 +31,25 @@ const resolver: Resolver<TFormValues> = async values => {
 
 export default function SignInPage() {
   const router = useRouter()
+  const [loading, setLoading] = useState(false)
   const { isAuthenticated } = useAuth()
   const {
     register,
     handleSubmit,
     formState: { errors }
   } = useForm<TFormValues>({ resolver })
-  const onSubmit: SubmitHandler<TFormValues> = data => {
-    console.log(data)
+  const onSubmit: SubmitHandler<TFormValues> = async data => {
+    try {
+      setLoading(true)
+      const response = await axios.post('/api/users/login', data)
+      console.log('Login success', response.data)
+      router.push('/profile')
+    } catch (error: any) {
+      console.log('Login failed', error.message)
+      toast.error(error.message)
+    } finally {
+      setLoading(false)
+    }
   }
   useEffect(() => {
     if (isAuthenticated) {
@@ -44,7 +57,7 @@ export default function SignInPage() {
     }
   }, [isAuthenticated, router])
   return isAuthenticated ? (
-    <></>
+    <Spinner />
   ) : (
     <AuthContainer title="Sign Up">
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -55,6 +68,7 @@ export default function SignInPage() {
           label="Email"
           error={errors.email?.message}
           required
+          disabled={loading}
         />
         <Input
           {...register('password', { required: true })}
@@ -63,8 +77,11 @@ export default function SignInPage() {
           label="Password"
           error={errors.password?.message}
           required
+          disabled={loading}
         />
-        <Button type="submit">Sign Up</Button>
+        <Button type="submit" loading={loading}>
+          Sign Up
+        </Button>
       </form>
     </AuthContainer>
   )

@@ -1,5 +1,6 @@
 'use client'
 
+import { Spinner } from '@/components'
 import useAuth from '@/context/useAuth'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
@@ -14,7 +15,7 @@ const ProtectedLayout = ({ children }: { children: React.ReactNode }) => {
   }, [isAuthenticated, router])
 
   if (!isAuthenticated) {
-    return <></>
+    return <Spinner />
   }
   return children
 }
