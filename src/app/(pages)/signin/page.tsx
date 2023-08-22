@@ -80,7 +80,7 @@ export default function SignInPage() {
           disabled={loading}
         />
         <Button type="submit" loading={loading}>
-          Sign Up
+          Login
         </Button>
       </form>
     </AuthContainer>

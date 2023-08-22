@@ -18,6 +18,7 @@ type TFormValues = {
 }
 
 const resolver: Resolver<TFormValues> = async values => {
+  console.log(values)
   return {
     values,
     errors: {
@@ -41,6 +42,7 @@ export default function SignUpPage() {
     formState: { errors }
   } = useForm<TFormValues>({ resolver })
   const onSubmit: SubmitHandler<TFormValues> = async data => {
+    console.log(data)
     try {
       setLoading(true)
       const response = await axios.post('/api/users/signup', data)
