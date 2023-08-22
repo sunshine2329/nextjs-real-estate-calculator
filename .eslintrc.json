@@ -15,7 +15,6 @@
   "parser": "@typescript-eslint/parser",
   "plugins": ["@typescript-eslint", "prettier", "react", "react-refresh"],
   "rules": {
-    "react-refresh/only-export-components": ["warn", { "allowConstantExport": true }],
     "semi": [2, "never"],
     "@typescript-eslint/class-name-casing": "off",
     "@typescript-eslint/interface-name-prefix": "off",
