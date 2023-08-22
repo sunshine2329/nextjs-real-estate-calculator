@@ -10,7 +10,6 @@ export type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>((props, ref) => {
-  console.log(props)
   const { className, label, error, id, required, ...rest } = props
   return (
     <div className={classNames('flex flex-col w-full mb-4', className)}>

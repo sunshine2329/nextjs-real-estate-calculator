@@ -6,6 +6,7 @@
 import { AuthContainer, Button, Input } from '@/components'
 import useAuth from '@/context/useAuth'
 import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
 import { useForm, Resolver, SubmitHandler } from 'react-hook-form'
 
 type TFormValues = {
@@ -39,11 +40,15 @@ export default function SignUpPage() {
   const onSubmit: SubmitHandler<TFormValues> = data => {
     console.log(data)
   }
-  if (isAuthenticated) {
-    router.replace('/')
-    return <></>
-  }
-  return (
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.replace('/')
+    }
+  }, [isAuthenticated, router])
+
+  return isAuthenticated ? (
+    <></>
+  ) : (
     <AuthContainer title="Sign Up">
       <form onSubmit={handleSubmit(onSubmit)}>
         <Input
