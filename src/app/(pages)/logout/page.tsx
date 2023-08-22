@@ -11,7 +11,7 @@ const LogoutPage = () => {
     setAuthStatus(false)
     router.replace('/')
   }, [])
-  return <></>
+  return <h1 className="m-auto w-full h-full">Logging out...</h1>
 }
 
 export default LogoutPage
