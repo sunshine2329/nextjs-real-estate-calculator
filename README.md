@@ -1,5 +1,7 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+AWS Link: http://54.165.250.219/
+
 ## Getting Started
 
 First, run the development server:
