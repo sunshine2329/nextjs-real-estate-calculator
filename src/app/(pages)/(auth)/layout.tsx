@@ -11,7 +11,7 @@ const HomeLayout = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     loading && setLoading(false)
     if (isAuthenticated) {
-      router.replace('/')
+      router.replace('/calculator')
     }
   }, [loading, isAuthenticated, router])
   if (loading) return <></>

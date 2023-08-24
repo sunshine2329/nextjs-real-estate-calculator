@@ -128,16 +128,19 @@ const CalculatorPage = () => {
   // }
   const renderInput = ({
     id,
+    label,
     formatType = 'currency',
     value
   }: TCalculatorInputProps & {
     id: keyof TFormValues
+    label: string
     formatType?: string
     value: number
   }) => (
     // disable-eslint
     <CalculatorInput
       id={id}
+      label={label}
       required
       labelClassName="font-semibold"
       inputClassName="text-right"

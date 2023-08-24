@@ -6,8 +6,7 @@
 import { AuthContainer, Button, Input, Spinner } from '@/components'
 import useAuth from '@/context/useAuth'
 import axios from 'axios'
-import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useForm, Resolver, SubmitHandler } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
 
@@ -31,7 +30,6 @@ const resolver: Resolver<TFormValues> = async values => {
 }
 
 export default function SignInPage() {
-  const router = useRouter()
   const [loading, setLoading] = useState(false)
   const { isAuthenticated, setAuthStatus } = useAuth()
   const {
@@ -52,11 +50,6 @@ export default function SignInPage() {
       setLoading(false)
     }
   }
-  useEffect(() => {
-    if (isAuthenticated) {
-      router.replace('/calculator')
-    }
-  }, [isAuthenticated, router])
   return isAuthenticated ? (
     <Spinner />
   ) : (
