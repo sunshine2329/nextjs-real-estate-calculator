@@ -54,7 +54,7 @@ export default function SignInPage() {
   }
   useEffect(() => {
     if (isAuthenticated) {
-      router.replace('/')
+      router.replace('/calculator')
     }
   }, [isAuthenticated, router])
   return isAuthenticated ? (

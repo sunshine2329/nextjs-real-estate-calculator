@@ -2,20 +2,33 @@
 
 import { Header } from '@/components'
 import { AuthProvider } from '@/context/authContext'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useReducer } from 'react'
+
+const reducer = (state: any, action: any) => {
+  switch (action.type) {
+    case 'AUTHENTICATION':
+      return action.payload
+    default:
+      return state
+  }
+}
 
 const HomeLayout = ({ children }: { children: React.ReactNode }) => {
-  const [isAuthenticated, setAuthStatus] = useState<boolean>(false)
+  const [isAuthenticated, dispatch] = useReducer(reducer, false)
+  const handleAuthenticate = (value: boolean) => {
+    dispatch({ type: 'AUTHENTICATION', payload: value })
+  }
+  // const [isAuthenticated, setAuthStatus] = useState<boolean>(false)
   const [loader, setLoader] = useState<boolean>(true)
   useEffect(() => {
     setLoader(false)
   }, [])
   return (
-    <AuthProvider value={{ isAuthenticated, setAuthStatus }}>
+    <AuthProvider value={{ isAuthenticated, setAuthStatus: handleAuthenticate }}>
       {!loader && (
         <>
           <Header />
-          <main className="px-2 py-4">{children}</main>
+          <main>{children}</main>
         </>
       )}
     </AuthProvider>

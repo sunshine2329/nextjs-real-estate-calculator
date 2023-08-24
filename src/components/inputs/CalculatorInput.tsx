@@ -1,7 +1,8 @@
 import React from 'react'
 import classNames from 'classnames'
+import { NumericFormatProps, NumericFormat } from 'react-number-format'
 
-export type TInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
+export type TCalculatorInputProps = NumericFormatProps & {
   id?: string
   className?: string
   label?: string
@@ -9,11 +10,21 @@ export type TInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
   inputClassName?: string
   error?: string
   required?: boolean
+  formatType?: string
 }
 
-const Input = React.forwardRef<HTMLInputElement, TInputProps>((props, ref) => {
-  const { className, label, error, id, required, labelClassName, inputClassName, ...rest } = props
-
+const CalculatorInput = React.forwardRef<JSX.Element, TCalculatorInputProps>((props, ref) => {
+  const {
+    className,
+    label,
+    error,
+    id,
+    required,
+    labelClassName,
+    inputClassName,
+    formatType,
+    ...rest
+  } = props
   return (
     <div className={classNames('flex flex-col w-full mb-4', className)}>
       {label && (
@@ -25,14 +36,20 @@ const Input = React.forwardRef<HTMLInputElement, TInputProps>((props, ref) => {
           {required && '*'}
         </label>
       )}
-      <input
+      <NumericFormat
         id={id}
-        ref={ref}
+        getInputRef={ref}
         className={classNames(
           'p-2 border border-gray-300 rounded-lg focus:outline-none focus:border_gray-600',
           { 'border-red-500 focus:border_red_600': error },
           inputClassName
         )}
+        // format={format}
+        prefix={formatType === 'currency' ? '$' : undefined}
+        suffix={formatType === 'percent' ? '%' : undefined}
+        decimalScale={2}
+        fixedDecimalScale
+        thousandSeparator=","
         {...rest}
       />
       {error && <span className="text-red-500 text-xs">{error}</span>}
@@ -40,6 +57,6 @@ const Input = React.forwardRef<HTMLInputElement, TInputProps>((props, ref) => {
   )
 })
 
-Input.displayName = 'Input'
+CalculatorInput.displayName = 'CalculatorInput'
 
-export default Input
+export default CalculatorInput

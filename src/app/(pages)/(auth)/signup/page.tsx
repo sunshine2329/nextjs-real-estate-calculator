@@ -1,8 +1,5 @@
 'use client'
 
-// import useAuth from '@/context/useAuth'
-// import Link from 'next/link'
-// import { useRouter } from 'next/navigation'
 import { AuthContainer, Button, Input, Spinner } from '@/components'
 import useAuth from '@/context/useAuth'
 import { useRouter } from 'next/navigation'

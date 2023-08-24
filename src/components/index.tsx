@@ -1,5 +1,6 @@
 export * from './inputs'
 export * from './buttons'
+export * from './containers'
+export * from './sections'
 export * from './Header'
-export { default as AuthContainer } from './AuthContainer'
 export { default as Spinner } from './Spinner'
