@@ -5,7 +5,7 @@ import useAuth from '@/context/useAuth'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 
-const ProtectedLayout = ({ children }: { children: React.ReactNode }) => {
+const PropertiesLayout = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter()
   const { isAuthenticated } = useAuth()
   useEffect(() => {
@@ -20,4 +20,4 @@ const ProtectedLayout = ({ children }: { children: React.ReactNode }) => {
   return children
 }
 
-export default ProtectedLayout
+export default PropertiesLayout

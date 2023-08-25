@@ -153,7 +153,7 @@ const CalculatorPage = () => {
     />
   )
   return (
-    <ContainerWithPageTitle title="Calculator" className="my-10 mx-16">
+    <ContainerWithPageTitle title="Calculator">
       <CalculatorSection title="Property Information" className="bg-transparent">
         <div className="flex space-x-4 mb-4">
           <h3>Property Address</h3>

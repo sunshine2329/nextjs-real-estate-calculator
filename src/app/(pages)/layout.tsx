@@ -16,11 +16,15 @@ const reducer = (state: any, action: any) => {
 const HomeLayout = ({ children }: { children: React.ReactNode }) => {
   const [isAuthenticated, dispatch] = useReducer(reducer, false)
   const handleAuthenticate = (value: boolean) => {
+    if (isAuthenticated !== value) {
+      sessionStorage.setItem('isAuthenticated', `${value}`)
+    }
     dispatch({ type: 'AUTHENTICATION', payload: value })
   }
   // const [isAuthenticated, setAuthStatus] = useState<boolean>(false)
   const [loader, setLoader] = useState<boolean>(true)
   useEffect(() => {
+    handleAuthenticate(sessionStorage.getItem('isAuthenticated') === 'true')
     setLoader(false)
   }, [])
   return (
