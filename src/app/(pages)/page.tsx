@@ -1,7 +1,7 @@
 'use client'
 import { Button, ContainerWithPageTitle, HouseCard, Input } from '@/components'
 import { useState } from 'react'
-import { getProperties } from '../../lib/properties'
+import { getProperties } from '@/lib/properties'
 
 type TProperty = {
   property_id: string
