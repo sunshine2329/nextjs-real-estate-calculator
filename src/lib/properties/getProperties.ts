@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 type TParamType = string | null
-export const getProperties = async (keyword?: TParamType, sort?: TParamType, beds?: TParamType) => {
+export const getProperties = async (keyword?: TParamType) => {
   try {
     // Request the location endpoint to get location based on input keyword
     const location = await axios.get('/api/location', {
@@ -15,9 +15,7 @@ export const getProperties = async (keyword?: TParamType, sort?: TParamType, bed
       '/api/properties',
       {
         city,
-        state_code,
-        sort,
-        beds
+        state_code
       } // Set parameters
     )
     const { data } = res

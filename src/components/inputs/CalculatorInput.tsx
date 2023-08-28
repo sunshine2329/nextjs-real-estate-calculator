@@ -10,7 +10,8 @@ export type TCalculatorInputProps = NumericFormatProps & {
   inputClassName?: string
   error?: string
   required?: boolean
-  formatType?: string
+  prefix?: string
+  suffix?: string
 }
 
 const CalculatorInput = React.forwardRef<JSX.Element, TCalculatorInputProps>((props, ref) => {
@@ -22,7 +23,8 @@ const CalculatorInput = React.forwardRef<JSX.Element, TCalculatorInputProps>((pr
     required,
     labelClassName,
     inputClassName,
-    formatType,
+    prefix,
+    suffix,
     ...rest
   } = props
   return (
@@ -45,8 +47,8 @@ const CalculatorInput = React.forwardRef<JSX.Element, TCalculatorInputProps>((pr
           inputClassName
         )}
         // format={format}
-        prefix={formatType === 'currency' ? '$' : undefined}
-        suffix={formatType === 'percent' ? '%' : undefined}
+        prefix={prefix}
+        suffix={suffix}
         decimalScale={2}
         fixedDecimalScale
         thousandSeparator=","

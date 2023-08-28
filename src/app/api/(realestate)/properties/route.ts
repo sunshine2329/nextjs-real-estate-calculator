@@ -7,7 +7,14 @@ export async function POST(request: NextRequest) {
     const response = await getRealEstateData({
       method: 'POST',
       url: 'https://realty-in-us.p.rapidapi.com/properties/v3/list',
-      data: { ...data, status: ['for_sale', 'ready_to_build'] }
+      data: {
+        ...data,
+        status: ['for_rent'],
+        sort: {
+          direction: 'desc',
+          field: 'list_date'
+        }
+      }
     })
     return NextResponse.json({ ...response.data })
   } catch (error: any) {

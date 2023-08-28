@@ -13,5 +13,5 @@ module.exports = withBundleAnalyzer({
   // So, the source code is "basePath-ready".
   // You can remove `basePath` if you don't need it.
   reactStrictMode: true,
-  images: { domains: ['ap.rdcpix.com'] }
+  images: { domains: ['ap.rdcpix.com', 'ar.rdcpix.com'] }
 })
