@@ -63,6 +63,7 @@ export default function SignInPage() {
           error={errors.email?.message}
           required
           disabled={loading}
+          className="mb-4"
         />
         <Input
           {...register('password', { required: true })}
@@ -72,8 +73,9 @@ export default function SignInPage() {
           error={errors.password?.message}
           required
           disabled={loading}
+          className="mb-4"
         />
-        <Button type="submit" loading={loading}>
+        <Button type="submit" loading={loading} className="w-full">
           Login
         </Button>
       </form>

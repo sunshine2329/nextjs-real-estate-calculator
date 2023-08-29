@@ -15,7 +15,7 @@ const Input = React.forwardRef<HTMLInputElement, TInputProps>((props, ref) => {
   const { className, label, error, id, required, labelClassName, inputClassName, ...rest } = props
 
   return (
-    <div className={classNames('flex flex-col w-full mb-4', className)}>
+    <div className={classNames('flex flex-col w-full', className)}>
       {label && (
         <label
           htmlFor={id}

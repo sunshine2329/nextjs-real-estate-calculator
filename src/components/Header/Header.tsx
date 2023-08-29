@@ -14,7 +14,7 @@ const Header = () => {
           <ul className="flex space-x-10">
             {!isAuthenticated && <NavItem label="Sign in" route="/signin" />}
             {!isAuthenticated && <NavItem label="Sign up" route="/signup" />}
-            {isAuthenticated && <NavItem label="Calculator" route="/calculator" />}
+            {isAuthenticated && <NavItem label="Calculator" route="/calculations" />}
             {isAuthenticated && <NavItem label="Profile" route="/profile" />}
           </ul>
         </div>

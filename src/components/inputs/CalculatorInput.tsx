@@ -42,7 +42,7 @@ const CalculatorInput = React.forwardRef<JSX.Element, TCalculatorInputProps>((pr
         id={id}
         getInputRef={ref}
         className={classNames(
-          'p-2 border border-gray-300 rounded-lg focus:outline-none focus:border_gray-600',
+          'p-2 border border-gray-300 rounded-lg focus:outline-none focus:border_gray-600 text-right',
           { 'border-red-500 focus:border_red_600': error },
           inputClassName
         )}

@@ -15,7 +15,7 @@ const Button: React.FC<ButtonProps> = ({
   ...rest
 }: ButtonProps) => {
   const btnClass =
-    'relative flex items-center justify-center w-full px-7 py-3 text-sm font-medium uppercase rounded transition duration-150 ease-in-out shadow-md hover:shadow-lg active:shadow-lg'
+    'relative flex items-center justify-center px-7 py-3 text-sm font-medium uppercase rounded transition duration-150 ease-in-out shadow-md hover:shadow-lg active:shadow-lg whitespace-nowrap'
 
   const primaryClass = 'bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800'
   const secondaryClass = 'bg-red-700 text-white hover:bg-red-800 active:bg-red-900'
