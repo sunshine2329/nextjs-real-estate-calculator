@@ -26,9 +26,6 @@ const resolver: Resolver<TAddressValues> = async values => {
   if (!values.street) {
     errors['street'] = { type: 'required', message: 'This is required.' }
   }
-  if (!values.street) {
-    errors['street'] = { type: 'required', message: 'This is required.' }
-  }
   if (!values.city) {
     errors['city'] = { type: 'required', message: 'This is required.' }
   }

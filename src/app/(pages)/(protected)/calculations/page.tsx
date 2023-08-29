@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
 
 const getAddress = (address: TAddressValues) =>
-  `${address.state}, ${address.city}, ${address.state}, ${address.postal_code}`
+  `${address.street}, ${address.city}, ${address.state}, ${address.postal_code}`
 
 const CalculatorPage = () => {
   const [data, setData] = useState<any[]>([])
