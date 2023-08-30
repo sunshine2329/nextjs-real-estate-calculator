@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 
 const UserSchema = new mongoose.Schema({
-  username: {
+  name: {
     type: String,
     required: [true, 'Please provide a username'],
     unique: true
@@ -16,6 +16,8 @@ const UserSchema = new mongoose.Schema({
     required: [true, 'Please provide a password']
   }
 })
+
+UserSchema.set('toJSON', { virtuals: true })
 
 const User = mongoose.models.users || mongoose.model('users', UserSchema)
 

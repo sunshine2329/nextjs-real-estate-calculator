@@ -15,7 +15,7 @@ export type TAddressValues = {
 }
 
 type TAddressProps = {
-  calculationId?: string
+  reportId?: string
   initialValues?: TAddressValues
 }
 
@@ -41,7 +41,7 @@ const resolver: Resolver<TAddressValues> = async values => {
   }
 }
 
-const Address = ({ calculationId, initialValues }: TAddressProps) => {
+const Address = ({ reportId, initialValues }: TAddressProps) => {
   const router = useRouter()
   const [loading, setLoading] = useState<boolean>(false)
   const {
@@ -54,11 +54,10 @@ const Address = ({ calculationId, initialValues }: TAddressProps) => {
       setLoading(true)
 
       let response: any
-      if (calculationId)
-        response = await axios.put(`/api/calculations/${calculationId}`, { address: data })
-      else response = await axios.post(`/api/calculations`, { address: data })
+      if (reportId) response = await axios.put(`/api/reports/${reportId}`, { address: data })
+      else response = await axios.post(`/api/reports`, { address: data })
       console.log('successfully saved', response.data)
-      !calculationId && router.push(`/calculations/${response.data.data._id}`)
+      !reportId && router.push(`/reports/${response.data.data._id}`)
     } catch (error: any) {
       console.log('Save failed', error.message)
       toast.error(error.message)

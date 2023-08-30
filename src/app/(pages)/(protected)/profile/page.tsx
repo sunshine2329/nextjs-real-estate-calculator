@@ -2,22 +2,46 @@
 
 import Link from 'next/link'
 import axios from 'axios'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast/headless'
-import { Button } from '@/components'
+import { Button, Spinner } from '@/components'
+import { useRouter } from 'next/navigation'
+import useAuth from '@/context/useAuth'
 
 const ProfilePage = () => {
   const [data, setData] = useState<{ [key: string]: string } | null>(null)
+  const [loading, setLoading] = useState(false)
+  const [loggingOut, setLoggingOut] = useState(false)
+  const { setAuthStatus } = useAuth()
+  const router = useRouter()
   const getUserDetails = async () => {
     try {
+      setLoading(true)
       const res = await axios.get('/api/users/me')
       console.log(res.data)
-      setData(res.data.data)
+      setData(res.data.data.user)
     } catch (error: any) {
       console.log('Failed getting user details', error.message)
       toast.error(error.message)
+    } finally {
+      setLoading(false)
     }
   }
+  const handleLogout = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+    try {
+      setLoggingOut(true)
+      await axios.get('/api/auth/logout')
+      setAuthStatus(false)
+      router.replace('/')
+    } catch (error: any) {
+      console.log('Logout Failed', error.message)
+      toast.error(error.message)
+    } finally {
+      setLoggingOut(false)
+    }
+  }
+
   useEffect(() => {
     getUserDetails()
   }, [])
@@ -32,15 +56,18 @@ const ProfilePage = () => {
         </Link>
       </h1>
       <span className="text-3xl font-bold">My Account</span>
-      {data && (
+      {loading && <p>Loading...</p>}
+      {!loading && data && (
         <div>
-          <h3>username: {data.username}</h3>
+          <h3>name: {data.name}</h3>
           <h3>email: {data.email}</h3>
         </div>
       )}
-      <Button className="my-4" color="secondary">
-        <Link href={'/logout'}>Logout</Link>
+      {!loading && !data && <p>Error</p>}
+      <Button className="my-4" color="secondary" onClick={handleLogout}>
+        Logout
       </Button>
+      {loggingOut && <Spinner />}
     </div>
   )
 }

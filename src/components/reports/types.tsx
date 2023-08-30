@@ -17,7 +17,7 @@ export type TFinancialReportValues = {
 }
 
 export type TFinancialReportProps = {
-  calculationId: string
+  reportId: string
   scenarioId?: string
   initialValues?: TFinancialReportValues
 }
@@ -35,7 +35,7 @@ export type ColumnDef<T> = {
   suffix?: string
 }
 
-export type TCalculationColumns = TScenarioValues & {
+export type TReportColumns = TScenarioValues & {
   no: number
   mortgagePayment: string
   capitalizationRate: string

@@ -1,6 +1,6 @@
 import { getRealEstateData } from '@/helpers'
 
-export const getCalculation = async (id: string) => {
+export const getReport = async (id: string) => {
   try {
     const response = await getRealEstateData({
       method: 'GET',

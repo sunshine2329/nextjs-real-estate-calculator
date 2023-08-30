@@ -1,33 +1,33 @@
 'use client'
 import { useRouter } from 'next/navigation'
 import useFinancialCalculations from './useFinancialCalculations'
-import { ColumnDef, TCalculationColumns, TScenarioValues } from './types'
+import { ColumnDef, TReportColumns, TScenarioValues } from './types'
 import { useMemo } from 'react'
 import classNames from 'classnames'
 import { isNumber } from 'lodash'
 
 const FinancialReportItem = ({
-  calculationId,
+  reportId,
   index,
   data,
   columns,
   getLeftStickyPos
 }: {
-  calculationId: string
+  reportId: string
   index: number
   data: TScenarioValues
-  columns: ColumnDef<TCalculationColumns>[]
+  columns: ColumnDef<TReportColumns>[]
   getLeftStickyPos: (index: number) => number
 }) => {
-  const calculationValues = useFinancialCalculations(data)
+  const reportValues = useFinancialCalculations(data)
   const values = useMemo(
-    () => ({ ...data, ...calculationValues, no: index }),
-    [calculationValues, data, index]
+    () => ({ ...data, ...reportValues, no: index }),
+    [reportValues, data, index]
   )
   const router = useRouter()
   const handleClick = (e: { preventDefault: () => void }) => {
     e.preventDefault()
-    router.push(`/calculations/${calculationId}/scenarios/${data._id}`)
+    router.push(`/reports/${reportId}/scenarios/${data._id}`)
   }
   return (
     <tr key={index} className="text-left cursor-pointer" onClick={handleClick}>

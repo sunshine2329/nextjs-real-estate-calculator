@@ -13,7 +13,7 @@ const reducer = (state: any, action: any) => {
   }
 }
 
-const HomeLayout = ({ children }: { children: React.ReactNode }) => {
+const ProtectedLayout = ({ children }: { children: React.ReactNode }) => {
   const [isAuthenticated, dispatch] = useReducer(reducer, false)
   const handleAuthenticate = (value: boolean) => {
     if (isAuthenticated !== value) {
@@ -39,4 +39,4 @@ const HomeLayout = ({ children }: { children: React.ReactNode }) => {
   )
 }
 
-export default HomeLayout
+export default ProtectedLayout

@@ -12,9 +12,9 @@ const Header = () => {
         </Link>
         <div>
           <ul className="flex space-x-10">
-            {!isAuthenticated && <NavItem label="Sign in" route="/signin" />}
-            {!isAuthenticated && <NavItem label="Sign up" route="/signup" />}
-            {isAuthenticated && <NavItem label="Calculator" route="/calculations" />}
+            {!isAuthenticated && <NavItem label="Login" route="/login" />}
+            {!isAuthenticated && <NavItem label="Register" route="/register" />}
+            {isAuthenticated && <NavItem label="Reports" route="/reports" />}
             {isAuthenticated && <NavItem label="Profile" route="/profile" />}
           </ul>
         </div>

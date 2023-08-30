@@ -15,7 +15,7 @@ import { toast } from 'react-hot-toast'
 import useFinancialCalculations from './useFinancialCalculations'
 import { TFinancialReportProps, TFinancialReportValues } from './types'
 
-const FinancialReport = ({ calculationId, scenarioId, initialValues }: TFinancialReportProps) => {
+const FinancialReport = ({ reportId, scenarioId, initialValues }: TFinancialReportProps) => {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
   const [loading, setLoading] = useState<boolean>(false)
@@ -77,18 +77,18 @@ const FinancialReport = ({ calculationId, scenarioId, initialValues }: TFinancia
 
       let response: any
       if (scenarioId)
-        response = await axios.put(`/api/calculations/${calculationId}/scenarios/${scenarioId}`, {
+        response = await axios.put(`/api/reports/${reportId}/scenarios/${scenarioId}`, {
           ...values
         })
       else
-        response = await axios.post(`/api/calculations/${calculationId}/scenarios`, {
+        response = await axios.post(`/api/reports/${reportId}/scenarios`, {
           ...values
         })
       console.log('successfully saved', response.data)
       startTransition(() => {
         router.refresh()
         if (scenarioId) router.back()
-        else router.push(`/calculations/${calculationId}`)
+        else router.push(`/reports/${reportId}`)
       })
     } catch (error: any) {
       console.log('Save failed', error.message)
@@ -102,9 +102,7 @@ const FinancialReport = ({ calculationId, scenarioId, initialValues }: TFinancia
     try {
       setLoading(true)
 
-      const response = await axios.delete(
-        `/api/calculations/${calculationId}/scenarios/${scenarioId}`
-      )
+      const response = await axios.delete(`/api/reports/${reportId}/scenarios/${scenarioId}`)
       console.log(response)
       startTransition(() => {
         router.refresh()
@@ -254,7 +252,7 @@ const FinancialReport = ({ calculationId, scenarioId, initialValues }: TFinancia
             })}
           </div>
         </CalculatorSection>
-        <CalculatorSection title="Pro Forma Calculations" className="flex-col m-2 !bg-slate-300">
+        <CalculatorSection title="Pro Forma Reports" className="flex-col m-2 !bg-slate-300">
           <CalculatorTotalSection label="1. Mortgage Payment" value={mortgagePayment} prefix="$" />
           <CalculatorTotalSection
             label="2. Capitalization Rate"
