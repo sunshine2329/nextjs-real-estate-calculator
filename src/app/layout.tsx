@@ -1,4 +1,4 @@
-// import api from '@/lib/api'
+import api from '@/lib/api'
 import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
@@ -11,10 +11,10 @@ export const metadata: Metadata = {
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  // api.setConfigure({
-  //   baseURL: process.env.BASE_URL!,
-  //   headers: { common: { 'Content-Type': 'application/json' } }
-  // })
+  api.setConfigure({
+    baseURL: process.env.BASE_URL!,
+    headers: { common: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' } }
+  })
   // console.log('RootLayout')
   // console.log(process.env.BASE_URL!)
   return (
