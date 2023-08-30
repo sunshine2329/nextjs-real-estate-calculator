@@ -45,8 +45,7 @@ export async function middleware(req: NextRequest) {
           new URL(`/login?${new URLSearchParams({ error: 'badauth' })}`, req.url)
         )
       }
-      await clearToken(errorResponse)
-      return errorResponse
+      return await clearToken(errorResponse)
     }
   }
   const authUser = (req as AuthenticatedRequest).user

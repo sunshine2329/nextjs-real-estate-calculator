@@ -73,4 +73,5 @@ export const clearToken = async (response: NextResponse) => {
       maxAge: -1
     })
   ])
+  return response
 }

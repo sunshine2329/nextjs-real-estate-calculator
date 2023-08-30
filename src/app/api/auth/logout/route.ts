@@ -7,7 +7,5 @@ export async function GET() {
     headers: { 'Content-Type': 'application/json' }
   })
 
-  await clearToken(response)
-
-  return response
+  return await clearToken(response)
 }
