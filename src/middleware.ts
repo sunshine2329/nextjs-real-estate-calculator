@@ -11,7 +11,8 @@ interface AuthenticatedRequest extends NextRequest {
 let redirectToLogin = false
 export async function middleware(req: NextRequest) {
   let token: string | undefined
-
+  console.log(req.nextUrl.pathname)
+  console.log(req.cookies)
   if (req.cookies.has('token')) {
     token = req.cookies.get('token')?.value
   } else if (req.headers.get('Authorization')?.startsWith('Bearer ')) {
