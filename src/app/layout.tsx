@@ -15,8 +15,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     baseURL: process.env.BASE_URL!,
     headers: { common: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' } }
   })
-  // console.log('RootLayout')
-  // console.log(process.env.BASE_URL!)
+  console.log('RootLayout')
+  console.log(process.env.BASE_URL!)
   return (
     <html lang="en">
       <body className={inter.className}>{children}</body>
