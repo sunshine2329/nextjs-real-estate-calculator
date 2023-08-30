@@ -19,8 +19,7 @@ export async function POST(req: NextRequest) {
     if (!user || !(await compare(data.password, user.password))) {
       return getErrorResponse(401, 'Invalid email or password')
     }
-    const response = await setToken(user._id)
-    return response
+    return await setToken(user._id)
   } catch (error: any) {
     if (error instanceof ZodError) {
       return getErrorResponse(400, 'failed validations', error)
