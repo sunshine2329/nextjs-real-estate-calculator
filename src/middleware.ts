@@ -29,13 +29,14 @@ export async function middleware(req: NextRequest) {
   }
 
   const response = NextResponse.next()
-
+  console.log(token)
   if (token) {
     try {
       const { sub } = await verifyJWT<{ sub: string }>(token)
       response.headers.set('X-USER-ID', sub)
       ;(req as AuthenticatedRequest).user = { id: sub }
     } catch (error: any) {
+      console.log(error)
       let errorResponse: NextResponse
       redirectToLogin = true
       if (req.nextUrl.pathname.startsWith('/api')) {
