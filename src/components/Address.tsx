@@ -1,7 +1,7 @@
 'use client'
 import { Input, Button } from '@/components'
 import { StringKeys, capitalizeFirstLetter } from '@/helpers'
-import axios from 'axios'
+import api from '@/lib/api'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { Resolver, SubmitHandler, useForm } from 'react-hook-form'
@@ -54,9 +54,8 @@ const Address = ({ reportId, initialValues }: TAddressProps) => {
       setLoading(true)
 
       let response: any
-      if (reportId) response = await axios.put(`/api/reports/${reportId}`, { address: data })
-      else response = await axios.post(`/api/reports`, { address: data })
-      console.log('successfully saved', response.data)
+      if (reportId) response = await api.put(`/api/reports/${reportId}`, { address: data })
+      else response = await api.post(`/api/reports`, { address: data })
       !reportId && router.push(`/reports/${response.data.data._id}`)
     } catch (error: any) {
       console.log('Save failed', error.message)

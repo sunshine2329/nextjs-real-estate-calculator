@@ -1,12 +1,12 @@
 'use client'
 
 import Link from 'next/link'
-import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast/headless'
 import { Button, Spinner } from '@/components'
 import { useRouter } from 'next/navigation'
 import useAuth from '@/context/useAuth'
+import api from '@/lib/api'
 
 const ProfilePage = () => {
   const [data, setData] = useState<{ [key: string]: string } | null>(null)
@@ -17,8 +17,7 @@ const ProfilePage = () => {
   const getUserDetails = async () => {
     try {
       setLoading(true)
-      const res = await axios.get('/api/users/me')
-      console.log(res.data)
+      const res = await api.get('/api/users/me')
       setData(res.data.data.user)
     } catch (error: any) {
       console.log('Failed getting user details', error.message)
@@ -31,8 +30,8 @@ const ProfilePage = () => {
     e.preventDefault()
     try {
       setLoggingOut(true)
-      await axios.get('/api/auth/logout')
-      setAuthStatus(false)
+      await api.get('/api/auth/logout')
+      setAuthStatus(null)
       router.replace('/')
     } catch (error: any) {
       console.log('Logout Failed', error.message)

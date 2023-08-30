@@ -2,7 +2,7 @@
 
 import { ContainerWithPageTitle, FinancialReport } from '@/components'
 import { TFinancialReportValues } from '@/components/reports/types'
-import axios from 'axios'
+import api from '@/lib/api'
 import { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
 
@@ -16,7 +16,7 @@ const ScenarioPage = ({
   const getScenario = async () => {
     try {
       setLoading(true)
-      const response = await axios.get(`/api/reports/${reportId}/scenarios/${scenarioId}`)
+      const response = await api.get(`/api/reports/${reportId}/scenarios/${scenarioId}`)
       setData(response.data.data)
     } catch (error: any) {
       console.log('Loading reports', error.message)

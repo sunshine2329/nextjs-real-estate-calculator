@@ -1,14 +1,14 @@
 'use client'
 
-import { AuthContainer, Button, Input, Spinner } from '@/components'
+import { AuthContainer, Button, Input } from '@/components'
 import useAuth from '@/context/useAuth'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useForm, Resolver, SubmitHandler } from 'react-hook-form'
-import axios from 'axios'
 import { toast } from 'react-hot-toast/headless'
 import { password } from '@/lib'
 import { capitalizeFirstLetter } from '@/helpers'
+import api from '@/lib/api'
 
 type TFormValues = {
   name: string
@@ -52,8 +52,7 @@ export default function SignUpPage() {
   const onSubmit: SubmitHandler<TFormValues> = async data => {
     try {
       setLoading(true)
-      const response = await axios.post('/api/auth/register', data)
-      console.log('successfully registered', response.data)
+      await api.post('/api/auth/register', data)
       router.push('/login')
     } catch (error: any) {
       console.log('Register failed: ', error)
@@ -82,9 +81,7 @@ export default function SignUpPage() {
     />
   )
 
-  return isAuthenticated ? (
-    <Spinner />
-  ) : (
+  return (
     <AuthContainer title="Register">
       <form onSubmit={handleSubmit(onSubmit)}>
         {renderInput('name', 'text', true)}

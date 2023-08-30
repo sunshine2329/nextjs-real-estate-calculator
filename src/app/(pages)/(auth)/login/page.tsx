@@ -1,11 +1,8 @@
 'use client'
 
-// import useAuth from '@/context/useAuth'
-// import Link from 'next/link'
-// import { useRouter } from 'next/navigation'
-import { AuthContainer, Button, Input, Spinner } from '@/components'
+import { AuthContainer, Button, Input } from '@/components'
 import useAuth from '@/context/useAuth'
-import axios from 'axios'
+import api from '@/lib/api'
 import { useState } from 'react'
 import { useForm, Resolver, SubmitHandler } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
@@ -31,7 +28,7 @@ const resolver: Resolver<TFormValues> = async values => {
 
 export default function SignInPage() {
   const [loading, setLoading] = useState(false)
-  const { isAuthenticated, setAuthStatus } = useAuth()
+  const { setAuthStatus } = useAuth()
   const {
     register,
     handleSubmit,
@@ -40,9 +37,8 @@ export default function SignInPage() {
   const onSubmit: SubmitHandler<TFormValues> = async data => {
     try {
       setLoading(true)
-      const response = await axios.post('/api/auth/login', data)
-      console.log('successfully logged in', response.data)
-      setAuthStatus(true)
+      const response = await api.post('/api/auth/login', data)
+      setAuthStatus(response.data.token)
     } catch (error: any) {
       console.log('Login failed', error.message)
       toast.error(error.message)
@@ -50,9 +46,7 @@ export default function SignInPage() {
       setLoading(false)
     }
   }
-  return isAuthenticated ? (
-    <Spinner />
-  ) : (
+  return (
     <AuthContainer title="Login">
       <form onSubmit={handleSubmit(onSubmit)}>
         <Input

@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import classNames from 'classnames'
 import { ColumnDef, TReportColumns, TScenarioValues } from './types'
-import { FinancialReportItem } from '.'
+import FinancialReportItem from './FinancialReportItem'
 
 const defaultColumns: ColumnDef<TReportColumns>[] = [
   {
@@ -19,147 +19,100 @@ const defaultColumns: ColumnDef<TReportColumns>[] = [
     isPinned: true
   },
   {
-    header: 'Loan Principal (P)',
-    accessorKey: 'loanPrincipal',
-    width: 150,
-    prefix: '$'
-  },
-  {
-    header: 'Annual Percentage Rate',
-    accessorKey: 'annualPercentageRate',
-    width: 200,
-    suffix: '%'
-  },
-  {
-    header: 'Loan Term',
-    accessorKey: 'loanTerm',
-    width: 80,
-    suffix: 'years'
-  },
-  {
-    header: 'Net Operating Income (NOI)',
-    accessorKey: 'netOperatingIncome',
-    width: 180,
-    prefix: '$'
-  },
-  {
-    header: 'Monthly Rental Income',
-    accessorKey: 'monthlyRentalIncome',
-    width: 180,
-    prefix: '$'
-  },
-  {
     header: 'Purchase Price',
-    accessorKey: 'purchasePrice',
+    accessorKey: 'purchase_price',
     width: 150,
     prefix: '$'
   },
   {
-    header: 'Rehab Costs',
-    accessorKey: 'rehabCosts',
+    header: 'Closing Costs',
+    accessorKey: 'closing_costs',
+    width: 200,
+    prefix: '$'
+  },
+  {
+    header: 'Finder Fee Cost',
+    accessorKey: 'finder_fee_cost',
     width: 80,
     prefix: '$'
   },
   {
-    header: 'Annual Debt Service',
-    accessorKey: 'annualDebtService',
-    width: 150,
-    prefix: '$'
-  },
-  {
-    header: 'Cash Outlay',
-    accessorKey: 'cashOutlay',
-    width: 100,
-    prefix: '$'
-  },
-  {
-    header: 'Operating Income',
-    accessorKey: 'operatingIncome',
-    width: 120,
-    prefix: '$'
-  },
-  {
-    header: 'Renovation Value',
-    accessorKey: 'renovationValue',
-    width: 150,
-    prefix: '$'
-  },
-  {
-    header: 'Estimated Repair Costs',
-    accessorKey: 'estimatedRepairCosts',
+    header: 'Rehab Expense',
+    accessorKey: 'rehab_expense',
     width: 180,
     prefix: '$'
   },
   {
-    header: 'Length',
-    accessorKey: 'length',
-    width: 80,
-    suffix: 'ft'
-  },
-  {
-    header: 'Width',
-    accessorKey: 'width',
-    width: 80,
-    suffix: 'ft'
-  },
-  {
-    header: 'Mortgage Payment',
-    accessorKey: 'mortgagePayment',
-    width: 120,
+    header: 'Total Cash In',
+    accessorKey: 'totalCashIn',
+    width: 180,
     prefix: '$'
   },
   {
-    header: 'Capitalization Rate',
-    accessorKey: 'capitalizationRate',
-    width: 150,
-    suffix: '%'
-  },
-  {
-    header: 'Rent Cost Ratio',
-    accessorKey: 'rentCostRatio',
-    width: 120,
-    suffix: '%'
-  },
-  {
-    header: 'Gross Yield',
-    accessorKey: 'grossYield',
-    width: 100,
-    suffix: '%'
-  },
-  {
-    header: 'Debt Service Ratio',
-    accessorKey: 'debtServiceRatio',
-    width: 150
-  },
-  {
-    header: 'Cash On cash Return',
-    accessorKey: 'cashOnCashReturn',
-    width: 200,
-    suffix: '%'
-  },
-  {
-    header: 'The 50% Rule',
-    accessorKey: 'maximumOfferPrice',
-    width: 100,
-    prefix: '$'
-  },
-  {
-    header: 'After Repair Value (ARV)',
-    accessorKey: 'afterRepairValue',
-    width: 200,
-    prefix: '$'
-  },
-  {
-    header: '70% of ARV Rule',
-    accessorKey: 'afterRepairValue',
+    header: 'Gross Rental Income',
+    accessorKey: 'gross_rental_income',
     width: 150,
     prefix: '$'
   },
   {
-    header: 'Square Footage',
-    accessorKey: 'squareFootage',
-    width: 200,
-    suffix: 'square feet'
+    header: 'Maintenance',
+    accessorKey: 'maintenance',
+    width: 80,
+    suffix: '%'
+  },
+  {
+    header: 'Vacancy',
+    accessorKey: 'vacancy',
+    width: 150,
+    suffix: '%'
+  },
+  {
+    header: 'Property Management',
+    accessorKey: 'management',
+    width: 100,
+    suffix: '%'
+  },
+  {
+    header: 'Capital Expenses',
+    accessorKey: 'capital_expenses',
+    width: 120,
+    suffix: '%'
+  },
+  {
+    header: 'Rental Expenses',
+    accessorKey: 'rentalExpenses',
+    width: 150,
+    prefix: '$'
+  },
+  {
+    header: 'Taxes (Annual)',
+    accessorKey: 'annual_taxes',
+    width: 180,
+    prefix: '$'
+  },
+  {
+    header: 'Property Insurance (Annual)',
+    accessorKey: 'annual_insurance',
+    width: 80,
+    prefix: '$'
+  },
+  {
+    header: 'Gross Income',
+    accessorKey: 'grossIncome',
+    width: 80,
+    prefix: '$'
+  },
+  {
+    header: 'Net Income',
+    accessorKey: 'netIncome',
+    width: 120,
+    prefix: '$'
+  },
+  {
+    header: 'CoC Renturn',
+    accessorKey: 'cocReturn',
+    width: 150,
+    suffix: '%'
   }
 ]
 
@@ -167,7 +120,7 @@ type TReportTableProps = {
   reportId: string
   scenarios: TScenarioValues[]
 }
-const ReportTable = ({ reportId, scenarios }: TReportTableProps) => {
+const ReportTable = ({ reportId, scenarios = [] }: TReportTableProps) => {
   const [columns, setColumns] = useState([...defaultColumns])
 
   const onPinColumn = (accessorKey: string, isPinned: boolean = false) => {

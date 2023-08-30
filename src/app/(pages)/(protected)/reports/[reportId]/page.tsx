@@ -1,36 +1,36 @@
+'use client'
 import {
   CalculatorSection,
   ContainerWithPageTitle,
   Address,
   Button,
-  ReportTable
+  ReportTable,
+  ReportChart
 } from '@/components'
-import axios from 'axios'
+import api from '@/lib/api'
 import Link from 'next/link'
+import { useEffect, useState } from 'react'
+import { toast } from 'react-hot-toast'
 
-async function getReports(reportId: string) {
-  try {
-    const response = await axios.get(`${process.env.API_URI}/api/reports/${reportId}`)
-    // data = response.data
-    console.log('successfully loaded')
-    return response.data.data
-  } catch (error: any) {
-    console.log('load failed', error.message)
+const ReportPage = ({ params: { reportId } }: { params: { reportId: string } }) => {
+  const [data, setData] = useState<any>(null)
+  const [loading, setLoading] = useState(false)
+  const getReports = async () => {
+    try {
+      setLoading(true)
+      const response = await api.get(`/api/reports/${reportId}`)
+      setData(response.data.data)
+    } catch (error: any) {
+      console.log('Loading reports', error.message)
+      toast.error(error.message)
+    } finally {
+      setLoading(false)
+    }
   }
-  return []
-}
 
-const ReportPage = async ({ params: { reportId } }: { params: { reportId: string } }) => {
-  const data = await getReports(reportId)
-  // let data: any
-  // try {
-  //   const response = await axios.get(`${process.env.API_URI}/api/reports/${reportId}`)
-  //   data = response.data.data
-  //   // data = response.data
-  //   console.log('successfully loaded')
-  // } catch (error: any) {
-  //   console.log('load failed', error.message)
-  // }
+  useEffect(() => {
+    getReports()
+  }, [])
 
   const renderActions = () => (
     <Link href={`/reports/${reportId}/scenarios/create`}>
@@ -38,15 +38,18 @@ const ReportPage = async ({ params: { reportId } }: { params: { reportId: string
     </Link>
   )
 
+  console.log(data)
   return (
     <ContainerWithPageTitle title="Report" actions={renderActions()} toRedirect="/reports">
-      {data && (
+      {loading && <p>Loading...</p>}
+      {!loading && data && (
         <CalculatorSection title="Property Information" className="bg-transparent">
           <Address reportId={reportId} initialValues={data.address} />
           <ReportTable reportId={reportId} scenarios={data.scenarios} />
+          <ReportChart scenarios={data.scenarios} />
         </CalculatorSection>
       )}
-      {!data && <p>Not Found Data.</p>}
+      {!loading && !data && <p>Not Found Data.</p>}
     </ContainerWithPageTitle>
   )
 }

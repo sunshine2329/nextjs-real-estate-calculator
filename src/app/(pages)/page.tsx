@@ -30,7 +30,7 @@ const HomePage = () => {
     e.stopPropagation()
     try {
       setLoading(true)
-      const data = await getProperties(keyword) // Trigger the API call on submit
+      const data = await getProperties(keyword || '') // Trigger the API call on submit
       setResponse(data)
     } catch (error: any) {
       console.error(error)

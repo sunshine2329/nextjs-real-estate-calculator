@@ -8,12 +8,25 @@ import {
   Input,
   TCalculatorInputProps
 } from '@/components'
-import axios from 'axios'
 import { useRouter } from 'next/navigation'
 import React, { useState, useTransition } from 'react'
 import { toast } from 'react-hot-toast'
 import useFinancialCalculations from './useFinancialCalculations'
 import { TFinancialReportProps, TFinancialReportValues } from './types'
+import api from '@/lib/api'
+import { useMemo } from 'react'
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+} from 'chart.js'
+import { Bar } from 'react-chartjs-2'
+
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 const FinancialReport = ({ reportId, scenarioId, initialValues }: TFinancialReportProps) => {
   const router = useRouter()
@@ -23,68 +36,87 @@ const FinancialReport = ({ reportId, scenarioId, initialValues }: TFinancialRepo
   const [values, setValues] = useState<TFinancialReportValues>(
     initialValues || {
       name: '',
-      loanPrincipal: 200000,
-      annualPercentageRate: 4,
-      loanTerm: 30,
-      netOperatingIncome: 30000,
-      purchasePrice: 250000,
-      rehabCosts: 250000,
-      monthlyRentalIncome: 2000,
-      annualDebtService: 25000,
-      cashOutlay: 50000,
-      operatingIncome: 50000,
-      renovationValue: 100000,
-      estimatedRepairCosts: 50000,
-      length: 20,
-      width: 15
+      purchase_price: 100000,
+      closing_costs: 1500,
+      finder_fee_cost: 3000,
+      rehab_expense: 35000,
+      gross_rental_income: 850,
+      maintenance: 10,
+      vacancy: 10,
+      management: 10,
+      capital_expenses: 5,
+      annual_taxes: 1800,
+      annual_insurance: 1200
     }
   )
   const {
     name,
-    loanPrincipal,
-    annualPercentageRate,
-    loanTerm,
-    netOperatingIncome,
-    purchasePrice,
-    rehabCosts,
-    monthlyRentalIncome,
-    annualDebtService,
-    cashOutlay,
-    operatingIncome,
-    renovationValue,
-    estimatedRepairCosts,
-    length,
-    width
+    purchase_price,
+    closing_costs,
+    finder_fee_cost,
+    rehab_expense,
+    gross_rental_income,
+    maintenance,
+    vacancy,
+    management,
+    capital_expenses,
+    annual_taxes,
+    annual_insurance
   } = values
 
-  const {
-    mortgagePayment,
-    capitalizationRate,
-    rentCostRatio,
-    grossYield,
-    debtServiceRatio,
-    cashOnCashReturn,
-    probableOperatingExpenses,
-    afterRepairValue,
-    maximumOfferPrice,
-    squareFootage
-  } = useFinancialCalculations(values)
+  const { totalCashIn, rentalExpenses, grossIncome, netIncome, cocReturn } =
+    useFinancialCalculations(values)
+
+  const chartOptions = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top' as const
+      },
+      title: {
+        display: true,
+        text: 'Reports over 30 years'
+      }
+    }
+  }
+  const chartData = useMemo(() => {
+    const currentYear = new Date().getFullYear()
+    const arr = Array.from(Array(30).keys())
+    return {
+      labels: arr.map(i => currentYear + i),
+      datasets: [
+        {
+          label: 'Net income',
+          backgroundColor: 'rgba(255, 99, 132, 0.5)',
+          data: arr.map(i => netIncome * (i + 1))
+        },
+        {
+          label: 'Appreciation',
+          backgroundColor: 'rgba(53, 162, 235, 0.5)',
+          data: arr.map(i => purchase_price * Math.pow(vacancy / 100 + 1, i + 1))
+        },
+        {
+          label: 'Rental rate increase * rental income',
+          backgroundColor: 'rgba(rgba(123, 135, 132, 0.5)',
+          data: arr.map(i => cocReturn * netIncome * (i + 1))
+        }
+      ]
+    }
+  }, [cocReturn, netIncome, purchase_price, vacancy])
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     try {
       setLoading(true)
 
-      let response: any
       if (scenarioId)
-        response = await axios.put(`/api/reports/${reportId}/scenarios/${scenarioId}`, {
+        await api.put(`/api/reports/${reportId}/scenarios/${scenarioId}`, {
           ...values
         })
       else
-        response = await axios.post(`/api/reports/${reportId}/scenarios`, {
+        await api.post(`/api/reports/${reportId}/scenarios`, {
           ...values
         })
-      console.log('successfully saved', response.data)
       startTransition(() => {
         router.refresh()
         if (scenarioId) router.back()
@@ -102,8 +134,7 @@ const FinancialReport = ({ reportId, scenarioId, initialValues }: TFinancialRepo
     try {
       setLoading(true)
 
-      const response = await axios.delete(`/api/reports/${reportId}/scenarios/${scenarioId}`)
-      console.log(response)
+      await api.delete(`/api/reports/${reportId}/scenarios/${scenarioId}`)
       startTransition(() => {
         router.refresh()
         router.back()
@@ -144,148 +175,120 @@ const FinancialReport = ({ reportId, scenarioId, initialValues }: TFinancialRepo
     />
   )
   return (
-    <form className="w-fit flex-col space-y-4 m-auto mt-10" onSubmit={handleSubmit}>
-      <div className="flex space-x-4 items-end mx-2">
-        <Input
-          label="Scenario Name"
-          id="name"
-          value={name}
-          onChange={e => setValues(prevState => ({ ...prevState, name: e.target.value }))}
-        />
-        <Button type="submit" loading={isMutating}>
-          Save
-        </Button>
-        {scenarioId && (
-          <Button type="button" loading={isMutating} onClick={handleRemove}>
-            Delete
+    <>
+      <form className="w-fit flex-col space-y-4 m-auto mt-10" onSubmit={handleSubmit}>
+        <div className="flex space-x-4 items-end mx-2">
+          <Input
+            label="Scenario Name"
+            id="name"
+            value={name}
+            onChange={e => setValues(prevState => ({ ...prevState, name: e.target.value }))}
+          />
+          <Button type="submit" loading={isMutating}>
+            Save
           </Button>
-        )}
-      </div>
-      <div className="flex flex-wrap mx-auto justify-center">
-        <CalculatorSection title="Property Details" className="flex flex-wrap w-fit m-2">
-          <div className="m-2">
-            {renderInput({
-              id: 'loanPrincipal',
-              label: 'Loan Principal (P)',
-              value: loanPrincipal,
-              prefix: '$'
-            })}
-            {renderInput({
-              id: 'annualPercentageRate',
-              label: 'Annual Percentage Rate',
-              value: annualPercentageRate,
-              suffix: '%'
-            })}
-            {renderInput({
-              id: 'loanTerm',
-              label: 'Loan Term',
-              value: loanTerm,
-              suffix: ' years'
-            })}
-            {renderInput({
-              id: 'netOperatingIncome',
-              label: 'Net Operating Income (NOI)',
-              value: netOperatingIncome,
-              prefix: '$'
-            })}
-            {renderInput({
-              id: 'monthlyRentalIncome',
-              label: 'Monthly Rental Income',
-              value: monthlyRentalIncome,
-              prefix: '$'
-            })}
-            {renderInput({
-              id: 'purchasePrice',
-              label: 'Purchase Price',
-              value: purchasePrice,
-              prefix: '$'
-            })}
-            {renderInput({
-              id: 'rehabCosts',
-              label: 'Rehab Costs',
-              value: rehabCosts,
-              prefix: '$'
-            })}
+          {scenarioId && (
+            <Button type="button" loading={isMutating} onClick={handleRemove}>
+              Delete
+            </Button>
+          )}
+        </div>
+        <div className="flex flex-wrap mx-auto justify-center">
+          <div className="m-4">
+            <CalculatorSection title="Purchase Information">
+              {renderInput({
+                id: 'purchase_price',
+                label: 'Purchase Price',
+                value: purchase_price,
+                prefix: '$'
+              })}
+              {renderInput({
+                id: 'closing_costs',
+                label: 'Closing Costs',
+                value: closing_costs,
+                prefix: '$'
+              })}
+              {renderInput({
+                id: 'finder_fee_cost',
+                label: 'Finder Fee Cost',
+                value: finder_fee_cost,
+                prefix: '$'
+              })}
+            </CalculatorSection>
+            <CalculatorSection title="Rehab Info">
+              {renderInput({
+                id: 'rehab_expense',
+                label: 'Rehab Expense',
+                value: rehab_expense,
+                prefix: '$'
+              })}
+            </CalculatorSection>
+            <CalculatorTotalSection label="Total Cash In" value={totalCashIn} prefix="$" />
           </div>
-          <div className="m-2">
-            {renderInput({
-              id: 'annualDebtService',
-              label: 'Annual Debt Service',
-              value: annualDebtService,
-              prefix: '$'
-            })}
-            {renderInput({
-              id: 'cashOutlay',
-              label: 'Cash Outlay',
-              value: cashOutlay,
-              prefix: '$'
-            })}
-            {renderInput({
-              id: 'operatingIncome',
-              label: 'Operating Income',
-              value: operatingIncome,
-              prefix: '$'
-            })}
-            {renderInput({
-              id: 'renovationValue',
-              label: 'Renovation Value',
-              value: renovationValue,
-              prefix: '$'
-            })}
-            {renderInput({
-              id: 'estimatedRepairCosts',
-              label: 'Estimated Repair Costs',
-              value: estimatedRepairCosts,
-              prefix: '$'
-            })}
-            {renderInput({
-              id: 'length',
-              label: 'Length',
-              value: length,
-              suffix: 'ft'
-            })}
-            {renderInput({
-              id: 'width',
-              label: 'Width',
-              value: width,
-              suffix: 'ft'
-            })}
+          <div className="m-4">
+            <CalculatorSection title="Rental Information">
+              {renderInput({
+                id: 'gross_rental_income',
+                label: 'Gross Rental Income',
+                value: gross_rental_income,
+                prefix: '$'
+              })}
+            </CalculatorSection>
+            <CalculatorSection title="Rental Expenses">
+              {renderInput({
+                id: 'maintenance',
+                label: 'Maintenance',
+                value: maintenance,
+                suffix: '%'
+              })}
+              {renderInput({
+                id: 'vacancy',
+                label: 'Vacancy',
+                value: vacancy,
+                suffix: '%'
+              })}
+              {renderInput({
+                id: 'management',
+                label: 'Property Management',
+                value: management,
+                suffix: '%'
+              })}
+              {renderInput({
+                id: 'capital_expenses',
+                label: 'Capital Expenses',
+                value: capital_expenses,
+                suffix: '%'
+              })}
+            </CalculatorSection>
+            <CalculatorTotalSection label="Rental Expenses" value={rentalExpenses} prefix="$" />
           </div>
-        </CalculatorSection>
-        <CalculatorSection title="Pro Forma Reports" className="flex-col m-2 !bg-slate-300">
-          <CalculatorTotalSection label="1. Mortgage Payment" value={mortgagePayment} prefix="$" />
-          <CalculatorTotalSection
-            label="2. Capitalization Rate"
-            value={capitalizationRate}
-            suffix="%"
-          />
-          <CalculatorTotalSection label="3. Rent Cost Ratio" value={rentCostRatio} suffix="%" />
-          <CalculatorTotalSection label="4. Gross Yield" value={grossYield} suffix="%" />
-          <CalculatorTotalSection label="5. Debt Service Ratio" value={debtServiceRatio} />
-          <CalculatorTotalSection
-            label="6. Cash On Cash Return"
-            value={cashOnCashReturn}
-            suffix="%"
-          />
-          <CalculatorTotalSection
-            label="7. The 50% Rule"
-            value={probableOperatingExpenses}
-            prefix="$"
-          />
-          <CalculatorTotalSection
-            label="8. After Repair Value (ARV)"
-            value={afterRepairValue}
-            prefix="$"
-          />
-          <CalculatorTotalSection label="9. 70% of ARV Rule" value={maximumOfferPrice} prefix="$" />
-          <CalculatorTotalSection
-            label="10. Square Footage"
-            value={squareFootage}
-            suffix=" square feet"
-          />
-        </CalculatorSection>
-      </div>
-    </form>
+          <div className="m-4">
+            <CalculatorSection title="Rental Information">
+              {renderInput({
+                id: 'annual_taxes',
+                label: 'Taxes (Annual)',
+                value: annual_taxes,
+                prefix: '$'
+              })}
+              {renderInput({
+                id: 'annual_insurance',
+                label: 'Property Insurance (Annual)',
+                value: annual_insurance,
+                prefix: '$'
+              })}
+            </CalculatorSection>
+          </div>
+          <div className="m-4">
+            <CalculatorSection title="Current">
+              <CalculatorTotalSection label="Gross Income" value={grossIncome} prefix="$" />
+              <CalculatorTotalSection label="Net Income" value={netIncome} prefix="$" />
+              <CalculatorTotalSection label="CoC Return" value={cocReturn} suffix="%" />
+            </CalculatorSection>
+          </div>
+        </div>
+      </form>
+      <Bar options={chartOptions} data={chartData} />
+    </>
   )
 }
 

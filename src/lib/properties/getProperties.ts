@@ -1,17 +1,13 @@
-import axios from 'axios'
+import api from '../api'
 
-type TParamType = string | null
-export const getProperties = async (keyword?: TParamType) => {
+export const getProperties = async (keyword: string) => {
   try {
     // Request the location endpoint to get location based on input keyword
-    const location = await axios.get('/api/location', {
-      params: { keyword }
-    })
+    const location = await api.get(`/api/location`, keyword)
     // Extract city and state from the response
     const { city, state_code } = location.data.autocomplete.filter((data: any) => data.city)[0]
-    console.log(city, state_code)
     // Request the properties endpoint to get available properties
-    const res = await axios.post(
+    const res = await api.post(
       '/api/properties',
       {
         city,

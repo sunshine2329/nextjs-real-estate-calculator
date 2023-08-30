@@ -2,7 +2,7 @@ import { createContext } from 'react'
 
 export const AuthContext = createContext<{
   isAuthenticated: boolean
-  setAuthStatus: (status: boolean) => void
+  setAuthStatus: (token?: string | null) => void
 }>({
   isAuthenticated: false,
   setAuthStatus: () => {}

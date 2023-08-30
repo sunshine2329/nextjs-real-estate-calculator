@@ -1,21 +1,21 @@
 import mongoose from 'mongoose'
 
+// Net Operating Income = Revenue – Operating Expenses
+
 export const ScenarioSchema = new mongoose.Schema({
   name: { type: String, required: [true, 'Please provide a address'] },
-  loanPrincipal: { type: Number },
-  annualPercentageRate: { type: Number },
-  loanTerm: { type: Number },
-  netOperatingIncome: { type: Number },
-  purchasePrice: { type: Number },
-  rehabCosts: { type: Number },
-  monthlyRentalIncome: { type: Number },
-  annualDebtService: { type: Number },
-  cashOutlay: { type: Number },
-  operatingIncome: { type: Number },
-  renovationValue: { type: Number },
-  estimatedRepairCosts: { type: Number },
-  length: { type: Number },
-  width: { type: Number },
+
+  purchase_price: { type: Number, default: 0 },
+  closing_costs: { type: Number, default: 0 },
+  finder_fee_cost: { type: Number, default: 0 },
+  rehab_expense: { type: Number, default: 0 },
+  gross_rental_income: { type: Number, default: 0 },
+  maintenance: { type: Number, default: 0 },
+  vacancy: { type: Number, default: 0 },
+  management: { type: Number, default: 0 },
+  capital_expenses: { type: Number, default: 0 },
+  annual_taxes: { type: Number, default: 0 },
+  annual_insurance: { type: Number, default: 0 },
   created: { type: Date, default: Date.now },
   updated: { type: Date }
 })

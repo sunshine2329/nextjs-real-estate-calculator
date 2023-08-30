@@ -1,19 +1,16 @@
 export type TFinancialReportValues = {
   name: string
-  loanPrincipal: number
-  annualPercentageRate: number
-  loanTerm: number
-  netOperatingIncome: number
-  purchasePrice: number
-  rehabCosts: number
-  monthlyRentalIncome: number
-  annualDebtService: number
-  cashOutlay: number
-  operatingIncome: number
-  renovationValue: number
-  estimatedRepairCosts: number
-  length: number
-  width: number
+  purchase_price: number
+  closing_costs: number
+  finder_fee_cost: number
+  rehab_expense: number
+  gross_rental_income: number
+  maintenance: number
+  vacancy: number
+  management: number
+  capital_expenses: number
+  annual_taxes: number
+  annual_insurance: number
 }
 
 export type TFinancialReportProps = {
@@ -37,14 +34,9 @@ export type ColumnDef<T> = {
 
 export type TReportColumns = TScenarioValues & {
   no: number
-  mortgagePayment: string
-  capitalizationRate: string
-  rentCostRatio: string
-  grossYield: string
-  debtServiceRatio: string
-  cashOnCashReturn: string
-  probableOperatingExpenses: string
-  afterRepairValue: string
-  maximumOfferPrice: string
-  squareFootage: string
+  totalCashIn: number
+  rentalExpenses: number
+  grossIncome: number
+  netIncome: number
+  cocReturn: number
 }

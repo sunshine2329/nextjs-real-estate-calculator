@@ -11,10 +11,8 @@ connect()
 export async function POST(req: NextRequest) {
   try {
     const body = (await req.json()) as RegisterUserInput
-    console.log(body)
     const data = RegisterUserSchema.parse(body)
 
-    console.log(data)
     const hashedPassword = await hash(data.password, 12)
     const user = new User({
       name: data.name,

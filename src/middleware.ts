@@ -50,7 +50,6 @@ export async function middleware(req: NextRequest) {
     }
   }
   const authUser = (req as AuthenticatedRequest).user
-
   if (!authUser) {
     return NextResponse.redirect(
       new URL(
@@ -71,5 +70,12 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/profile', '/reports/:path*', '/login', '/api/users/:path*', '/api/auth/logout']
+  matcher: [
+    '/profile',
+    '/reports/:path*',
+    '/login',
+    '/api/users/:path*',
+    '/api/reports/:path*',
+    '/api/auth/logout'
+  ]
 }

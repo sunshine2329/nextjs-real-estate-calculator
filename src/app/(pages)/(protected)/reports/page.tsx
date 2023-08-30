@@ -1,7 +1,7 @@
 'use client'
 
 import { ContainerWithPageTitle, Button, TAddressValues } from '@/components'
-import axios from 'axios'
+import api from '@/lib/api'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
@@ -15,7 +15,7 @@ const CalculatorPage = () => {
   const getReports = async () => {
     try {
       setLoading(true)
-      const response = await axios.get('/api/reports')
+      const response = await api.get('/api/reports')
       setData(response.data.data)
     } catch (error: any) {
       console.log('Loading reports', error.message)
