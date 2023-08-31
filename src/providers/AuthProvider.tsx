@@ -82,6 +82,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         if (token === null || token === undefined) {
           return
         }
+        api.setHeaderToken(token)
         const res = await api.get('/api/users/me')
         dispatch({ type: 'LOGIN', payload: { user: res.data.user, token } })
       } catch (err) {
