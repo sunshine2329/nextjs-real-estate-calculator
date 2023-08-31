@@ -1,37 +1,24 @@
 'use client'
 
 import Link from 'next/link'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { toast } from 'react-hot-toast/headless'
 import { Button, Spinner } from '@/components'
 import { useRouter } from 'next/navigation'
-import useAuth from '@/context/useAuth'
 import api from '@/lib/api'
+import { useAuthDispatch, useAuthState } from '@/providers/AuthProvider'
 
 const ProfilePage = () => {
-  const [data, setData] = useState<{ [key: string]: string } | null>(null)
-  const [loading, setLoading] = useState(false)
   const [loggingOut, setLoggingOut] = useState(false)
-  const { setAuthStatus } = useAuth()
+  const dispatch = useAuthDispatch()
+  const { user } = useAuthState()
   const router = useRouter()
-  const getUserDetails = async () => {
-    try {
-      setLoading(true)
-      const res = await api.get('/api/users/me')
-      setData(res.data.data.user)
-    } catch (error: any) {
-      console.log('Failed getting user details', error.message)
-      toast.error(error.message)
-    } finally {
-      setLoading(false)
-    }
-  }
   const handleLogout = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
     try {
       setLoggingOut(true)
       await api.get('/api/auth/logout')
-      setAuthStatus(null)
+      dispatch({ type: 'LOGOUT' })
       router.replace('/')
     } catch (error: any) {
       console.log('Logout Failed', error.message)
@@ -40,10 +27,6 @@ const ProfilePage = () => {
       setLoggingOut(false)
     }
   }
-
-  useEffect(() => {
-    getUserDetails()
-  }, [])
 
   return (
     <div className="w-full max-w-xl mx-auto py-8 gap-y-6">
@@ -55,14 +38,12 @@ const ProfilePage = () => {
         </Link>
       </h1>
       <span className="text-3xl font-bold">My Account</span>
-      {loading && <p>Loading...</p>}
-      {!loading && data && (
+      {user && (
         <div>
-          <h3>name: {data.name}</h3>
-          <h3>email: {data.email}</h3>
+          <h3>name: {user.name}</h3>
+          <h3>email: {user.email}</h3>
         </div>
       )}
-      {!loading && !data && <p>Error</p>}
       <Button className="my-4" color="secondary" onClick={handleLogout}>
         Logout
       </Button>

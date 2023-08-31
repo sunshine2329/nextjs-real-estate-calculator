@@ -16,6 +16,6 @@ export async function GET(req: NextRequest) {
 
   return NextResponse.json({
     status: 'success',
-    data: { user: { ...user.toJSON(), password: undefined } }
+    user: { ...user.toJSON(), password: undefined }
   })
 }

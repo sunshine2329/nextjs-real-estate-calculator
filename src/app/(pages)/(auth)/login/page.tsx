@@ -1,8 +1,9 @@
 'use client'
 
 import { AuthContainer, Button, Input } from '@/components'
-import useAuth from '@/context/useAuth'
 import api from '@/lib/api'
+import { useAuthDispatch } from '@/providers/AuthProvider'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { useForm, Resolver, SubmitHandler } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
@@ -28,7 +29,8 @@ const resolver: Resolver<TFormValues> = async values => {
 
 export default function SignInPage() {
   const [loading, setLoading] = useState(false)
-  const { setAuthStatus } = useAuth()
+  const dispatch = useAuthDispatch()
+  const router = useRouter()
   const {
     register,
     handleSubmit,
@@ -38,7 +40,8 @@ export default function SignInPage() {
     try {
       setLoading(true)
       const response = await api.post('/api/auth/login', data)
-      setAuthStatus(response.data.token)
+      dispatch({ type: 'LOGIN', payload: response.data })
+      router.replace('/reports')
     } catch (error: any) {
       console.log('Login failed', error.message)
       toast.error(error.message)

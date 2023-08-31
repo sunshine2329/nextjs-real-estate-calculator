@@ -1,9 +1,9 @@
 import Link from 'next/link'
 import NavItem from './NavItem'
-import useAuth from '@/context/useAuth'
+import { useAuthState } from '@/providers/AuthProvider'
 
 const Header = () => {
-  const { isAuthenticated } = useAuth()
+  const { authenticated } = useAuthState()
   return (
     <div className="bg-white border-b shadow-sm sticky top-0 z-40">
       <header className="flex justify-between items-center px-10 mx-auto">
@@ -12,10 +12,10 @@ const Header = () => {
         </Link>
         <div>
           <ul className="flex space-x-10">
-            {!isAuthenticated && <NavItem label="Login" route="/login" />}
-            {!isAuthenticated && <NavItem label="Register" route="/register" />}
-            {isAuthenticated && <NavItem label="Reports" route="/reports" />}
-            {isAuthenticated && <NavItem label="Profile" route="/profile" />}
+            {!authenticated && <NavItem label="Login" route="/login" />}
+            {!authenticated && <NavItem label="Register" route="/register" />}
+            {authenticated && <NavItem label="Reports" route="/reports" />}
+            {authenticated && <NavItem label="Profile" route="/profile" />}
           </ul>
         </div>
       </header>

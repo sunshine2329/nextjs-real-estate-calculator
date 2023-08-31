@@ -23,10 +23,10 @@ export const verifyJWT = async <T>(token: string): Promise<T> => {
   }
 }
 
-export const setToken = async (userId: string) => {
+export const setToken = async (user: any) => {
   const JWT_EXPIRES_IN = getEnvVariable('JWT_EXPIRES_IN')
 
-  const token = await signJWT({ sub: userId }, { exp: `${JWT_EXPIRES_IN}m` })
+  const token = await signJWT({ sub: user.id }, { exp: `${JWT_EXPIRES_IN}m` })
 
   const tokenMaxAge = parseInt(JWT_EXPIRES_IN) * 60
   console.log(token)
@@ -43,7 +43,8 @@ export const setToken = async (userId: string) => {
   const response = new NextResponse(
     JSON.stringify({
       status: 'success',
-      token
+      token,
+      user
     }),
     {
       status: 200,

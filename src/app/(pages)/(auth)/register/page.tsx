@@ -1,9 +1,8 @@
 'use client'
 
 import { AuthContainer, Button, Input } from '@/components'
-import useAuth from '@/context/useAuth'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useForm, Resolver, SubmitHandler } from 'react-hook-form'
 import { toast } from 'react-hot-toast/headless'
 import { password } from '@/lib'
@@ -43,7 +42,6 @@ const resolver: Resolver<TFormValues> = async values => {
 export default function SignUpPage() {
   const router = useRouter()
   const [loading, setLoading] = useState<boolean>(false)
-  const { isAuthenticated } = useAuth()
   const {
     register,
     handleSubmit,
@@ -61,12 +59,6 @@ export default function SignUpPage() {
       setLoading(false)
     }
   }
-  useEffect(() => {
-    if (isAuthenticated) {
-      router.replace('/')
-    }
-  }, [isAuthenticated, router])
-
   const renderInput = (id: keyof TFormValues, type: string, required: boolean, label?: string) => (
     <Input
       {...register(id, { required })}
