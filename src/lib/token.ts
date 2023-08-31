@@ -36,7 +36,7 @@ export const setToken = async (user: any) => {
     value: token,
     httpOnly: true,
     path: '/',
-    secure: process.env.NODE_ENV !== 'development',
+    secure: false, //process.env.NODE_ENV !== 'development',
     maxAge: tokenMaxAge
   }
 
