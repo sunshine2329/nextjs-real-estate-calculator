@@ -11,8 +11,12 @@ import {
 import { Bar } from 'react-chartjs-2'
 import { TScenarioValues } from './types'
 import { useMemo } from 'react'
+import getFinancialCalculations from './getFinancialCalculations'
+import { generateRandomColor } from '@/helpers'
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
+
+const colors: string[] = []
 
 export const options = {
   responsive: true,
@@ -28,55 +32,29 @@ export const options = {
 }
 
 const ReportChart = ({ scenarios = [] }: { scenarios: TScenarioValues[] }) => {
-  const getValuesForScenario = (scenario: TScenarioValues) => {
-    const {
-      name,
-      purchase_price,
-      closing_costs,
-      finder_fee_cost,
-      rehab_expense,
-      gross_rental_income,
-      maintenance,
-      vacancy,
-      management,
-      capital_expenses,
-      annual_taxes,
-      annual_insurance
-    } = scenario
-    const totalCashIn = purchase_price + closing_costs + finder_fee_cost + rehab_expense
-
-    const rentalExpenses =
-      (gross_rental_income * (maintenance + vacancy + management + capital_expenses)) / 100
-
-    const grossIncome = gross_rental_income * 12
-    const netIncome = grossIncome - rentalExpenses * 12 - annual_taxes - annual_insurance
-
-    const cocReturn = (netIncome / totalCashIn) * 100
-    return { name, netIncome, purchase_price, vacancy, cocReturn }
-  }
   const data = useMemo(() => {
-    const values = scenarios.map(getValuesForScenario)
+    if (colors.length < scenarios.length) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      Array.from(Array(scenarios.length - colors.length).keys()).forEach(_ =>
+        colors.push(generateRandomColor())
+      )
+    }
+    const values = scenarios.map(scenario => ({
+      ...getFinancialCalculations(scenario, 30),
+      name: scenario.name
+    }))
+    console.log(values)
     return {
-      labels: values.map(scenario => scenario.name),
-      datasets: [
-        {
-          label: 'Net income over 30 years',
-          backgroundColor: 'rgba(255, 99, 132, 0.5)',
-          data: values.map(scenario => scenario.netIncome * 30)
-        },
-        {
-          label: 'Appreciation over 30 years',
-          backgroundColor: 'rgba(53, 162, 235, 0.5)',
-          data: values.map(
-            scenario => scenario.purchase_price * Math.pow(scenario.vacancy / 100 + 1, 30)
-          )
-        },
-        {
-          label: 'Rental rate increase over 30 years * rental income',
-          backgroundColor: 'rgba(rgba(123, 135, 132, 0.5)',
-          data: values.map(scenario => scenario.cocReturn * scenario.netIncome * 30)
-        }
-      ]
+      labels: [
+        'Net income over 30 years',
+        'Appreciation over 30 years',
+        'Rental Income over 30 years'
+      ],
+      datasets: values.map(({ name, netIncome, appreciation, rentalIncome }, index) => ({
+        label: name,
+        backgroundColor: colors[index],
+        data: [netIncome, appreciation, rentalIncome]
+      }))
     }
   }, [scenarios])
   console.log(data)

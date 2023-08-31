@@ -1,3 +1,4 @@
+'use client'
 import Link from 'next/link'
 import NavItem from './NavItem'
 import { useAuthState } from '@/providers/AuthProvider'

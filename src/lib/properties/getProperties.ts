@@ -15,7 +15,6 @@ export const getProperties = async (keyword: string) => {
       } // Set parameters
     )
     const { data } = res
-    console.log(res)
     return Promise.resolve(data.home_search.results)
   } catch (error) {
     console.error(error)

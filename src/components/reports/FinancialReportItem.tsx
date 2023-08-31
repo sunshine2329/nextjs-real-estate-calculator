@@ -1,6 +1,6 @@
 'use client'
 import { useRouter } from 'next/navigation'
-import useFinancialCalculations from './useFinancialCalculations'
+import useFinancialCalculations from './getFinancialCalculations'
 import { ColumnDef, TReportColumns, TScenarioValues } from './types'
 import { useMemo } from 'react'
 import classNames from 'classnames'

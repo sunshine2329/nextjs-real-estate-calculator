@@ -41,7 +41,7 @@ export default function SignInPage() {
       setLoading(true)
       const response = await api.post('/api/auth/login', data)
       dispatch({ type: 'LOGIN', payload: response.data })
-      router.replace('/reports')
+      router.push('/reports')
     } catch (error: any) {
       console.log('Login failed', error.message)
       toast.error(error.message)

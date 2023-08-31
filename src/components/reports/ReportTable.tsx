@@ -25,94 +25,76 @@ const defaultColumns: ColumnDef<TReportColumns>[] = [
     prefix: '$'
   },
   {
-    header: 'Closing Costs',
-    accessorKey: 'closing_costs',
+    header: 'Gross Annual Income',
+    accessorKey: 'gross_annual_income',
     width: 200,
     prefix: '$'
   },
   {
-    header: 'Finder Fee Cost',
-    accessorKey: 'finder_fee_cost',
-    width: 80,
-    prefix: '$'
-  },
-  {
-    header: 'Rehab Expense',
-    accessorKey: 'rehab_expense',
-    width: 180,
-    prefix: '$'
-  },
-  {
-    header: 'Total Cash In',
-    accessorKey: 'totalCashIn',
-    width: 180,
-    prefix: '$'
-  },
-  {
-    header: 'Gross Rental Income',
-    accessorKey: 'gross_rental_income',
-    width: 150,
-    prefix: '$'
-  },
-  {
-    header: 'Maintenance',
-    accessorKey: 'maintenance',
+    header: 'Annual Rental Rate Increase',
+    accessorKey: 'rental_increase',
     width: 80,
     suffix: '%'
   },
   {
-    header: 'Vacancy',
-    accessorKey: 'vacancy',
+    header: 'Annual Expenses Rate Increase',
+    accessorKey: 'expenses_increase',
+    width: 180,
+    suffix: '%'
+  },
+  {
+    header: 'Maintenance Expense Rate',
+    accessorKey: 'maintenance_rate',
+    width: 180,
+    suffix: '%'
+  },
+  {
+    header: 'Vacancy Rate',
+    accessorKey: 'vacancy_rate',
     width: 150,
     suffix: '%'
   },
   {
-    header: 'Property Management',
-    accessorKey: 'management',
+    header: 'Capital Rate',
+    accessorKey: 'capital_rate',
+    width: 80,
+    suffix: '%'
+  },
+  {
+    header: 'Annual Tax Rate',
+    accessorKey: 'tax_rate',
+    width: 150,
+    suffix: '%'
+  },
+  {
+    header: 'Annual Insurance Rate',
+    accessorKey: 'insurance_rate',
     width: 100,
     suffix: '%'
   },
   {
-    header: 'Capital Expenses',
-    accessorKey: 'capital_expenses',
+    header: 'Appreciation Rate',
+    accessorKey: 'appreciation_rate',
     width: 120,
     suffix: '%'
-  },
-  {
-    header: 'Rental Expenses',
-    accessorKey: 'rentalExpenses',
-    width: 150,
-    prefix: '$'
-  },
-  {
-    header: 'Taxes (Annual)',
-    accessorKey: 'annual_taxes',
-    width: 180,
-    prefix: '$'
-  },
-  {
-    header: 'Property Insurance (Annual)',
-    accessorKey: 'annual_insurance',
-    width: 80,
-    prefix: '$'
-  },
-  {
-    header: 'Gross Income',
-    accessorKey: 'grossIncome',
-    width: 80,
-    prefix: '$'
   },
   {
     header: 'Net Income',
     accessorKey: 'netIncome',
-    width: 120,
+    width: 150,
     prefix: '$'
   },
   {
-    header: 'CoC Renturn',
-    accessorKey: 'cocReturn',
-    width: 150,
-    suffix: '%'
+    header: 'Appreciation',
+    accessorKey: 'appreciation',
+    width: 180,
+    prefix: '$'
+  },
+  {
+    header: 'Rental Income',
+    accessorKey: 'rentalIncome',
+    width: 80,
+    prefix: '$'
   }
 ]
 

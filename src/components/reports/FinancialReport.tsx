@@ -11,7 +11,7 @@ import {
 import { useRouter } from 'next/navigation'
 import React, { useState, useTransition } from 'react'
 import { toast } from 'react-hot-toast'
-import useFinancialCalculations from './useFinancialCalculations'
+import getFinancialCalculations from './getFinancialCalculations'
 import { TFinancialReportProps, TFinancialReportValues } from './types'
 import api from '@/lib/api'
 import { useMemo } from 'react'
@@ -37,72 +37,77 @@ const FinancialReport = ({ reportId, scenarioId, initialValues }: TFinancialRepo
     initialValues || {
       name: '',
       purchase_price: 100000,
-      closing_costs: 1500,
-      finder_fee_cost: 3000,
-      rehab_expense: 35000,
-      gross_rental_income: 850,
-      maintenance: 10,
-      vacancy: 10,
-      management: 10,
-      capital_expenses: 5,
-      annual_taxes: 1800,
-      annual_insurance: 1200
+      gross_annual_income: 12000,
+      rental_increase: 2,
+      expenses_increase: 3,
+      tax_rate: 3,
+      insurance_rate: 0.5,
+      maintenance_rate: 10,
+      management_rate: 10,
+      vacancy_rate: 10,
+      capital_rate: 5,
+      appreciation_rate: 3
     }
   )
   const {
     name,
     purchase_price,
-    closing_costs,
-    finder_fee_cost,
-    rehab_expense,
-    gross_rental_income,
-    maintenance,
-    vacancy,
-    management,
-    capital_expenses,
-    annual_taxes,
-    annual_insurance
+    gross_annual_income,
+    rental_increase,
+    expenses_increase,
+    tax_rate,
+    insurance_rate,
+    maintenance_rate,
+    management_rate,
+    vacancy_rate,
+    capital_rate,
+    appreciation_rate
   } = values
 
-  const { totalCashIn, rentalExpenses, grossIncome, netIncome, cocReturn } =
-    useFinancialCalculations(values)
-
-  const chartOptions = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: 'top' as const
-      },
-      title: {
-        display: true,
-        text: 'Reports over 30 years'
-      }
-    }
-  }
-  const chartData = useMemo(() => {
+  const { chartData, netIncome, appreciation, rentalIncome } = useMemo(() => {
     const currentYear = new Date().getFullYear()
     const arr = Array.from(Array(30).keys())
-    return {
-      labels: arr.map(i => currentYear + i),
-      datasets: [
-        {
-          label: 'Net income',
-          backgroundColor: 'rgba(255, 99, 132, 0.5)',
-          data: arr.map(i => netIncome * (i + 1))
+    const data = arr.map(i => getFinancialCalculations(values, i))
+    const chartOptions = (title: string) => ({
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'top' as const
         },
-        {
-          label: 'Appreciation',
-          backgroundColor: 'rgba(53, 162, 235, 0.5)',
-          data: arr.map(i => purchase_price * Math.pow(vacancy / 100 + 1, i + 1))
-        },
-        {
-          label: 'Rental rate increase * rental income',
-          backgroundColor: 'rgba(rgba(123, 135, 132, 0.5)',
-          data: arr.map(i => cocReturn * netIncome * (i + 1))
+        title: {
+          display: true,
+          text: title
         }
-      ]
-    }
-  }, [cocReturn, netIncome, purchase_price, vacancy])
+      }
+    })
+    const labels = arr.map(i => currentYear + i)
+    const chartData = [
+      {
+        options: chartOptions('Real estate calculation over 30 years'),
+        data: {
+          labels,
+          datasets: [
+            {
+              label: 'Net income over 30 years',
+              backgroundColor: 'rgba(255, 99, 132, 0.5)',
+              data: data.map(({ netIncome }) => netIncome)
+            },
+            {
+              label: 'Appreciation over 30 years',
+              backgroundColor: 'rgba(53, 162, 235, 0.5)',
+              data: data.map(({ appreciation }) => appreciation)
+            },
+            {
+              label: 'Rental Income over 30 years',
+              backgroundColor: 'rgba(rgba(123, 135, 132, 0.5)',
+              data: data.map(({ rentalIncome }) => rentalIncome)
+            }
+          ]
+        }
+      }
+    ]
+    return { chartData, ...getFinancialCalculations(values) }
+  }, [values])
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -202,92 +207,90 @@ const FinancialReport = ({ reportId, scenarioId, initialValues }: TFinancialRepo
                 value: purchase_price,
                 prefix: '$'
               })}
-              {renderInput({
-                id: 'closing_costs',
-                label: 'Closing Costs',
-                value: closing_costs,
-                prefix: '$'
-              })}
-              {renderInput({
-                id: 'finder_fee_cost',
-                label: 'Finder Fee Cost',
-                value: finder_fee_cost,
-                prefix: '$'
-              })}
             </CalculatorSection>
-            <CalculatorSection title="Rehab Info">
-              {renderInput({
-                id: 'rehab_expense',
-                label: 'Rehab Expense',
-                value: rehab_expense,
-                prefix: '$'
-              })}
-            </CalculatorSection>
-            <CalculatorTotalSection label="Total Cash In" value={totalCashIn} prefix="$" />
-          </div>
-          <div className="m-4">
             <CalculatorSection title="Rental Information">
               {renderInput({
-                id: 'gross_rental_income',
-                label: 'Gross Rental Income',
-                value: gross_rental_income,
+                id: 'gross_annual_income',
+                label: 'Gross Annual Income',
+                value: gross_annual_income,
                 prefix: '$'
               })}
+              {renderInput({
+                id: 'rental_increase',
+                label: 'Annual Rental Rate Increase',
+                value: rental_increase,
+                suffix: '%'
+              })}
+              {renderInput({
+                id: 'expenses_increase',
+                label: 'Annual Expenses Rate Increase',
+                value: expenses_increase,
+                suffix: '%'
+              })}
             </CalculatorSection>
+          </div>
+          <div className="m-4">
             <CalculatorSection title="Rental Expenses">
               {renderInput({
-                id: 'maintenance',
-                label: 'Maintenance',
-                value: maintenance,
+                id: 'maintenance_rate',
+                label: 'Maintenance Expense Rate',
+                value: maintenance_rate,
                 suffix: '%'
               })}
               {renderInput({
-                id: 'vacancy',
-                label: 'Vacancy',
-                value: vacancy,
+                id: 'vacancy_rate',
+                label: 'Vacancy Rate',
+                value: vacancy_rate,
                 suffix: '%'
               })}
               {renderInput({
-                id: 'management',
+                id: 'management_rate',
                 label: 'Property Management',
-                value: management,
+                value: management_rate,
                 suffix: '%'
               })}
               {renderInput({
-                id: 'capital_expenses',
+                id: 'capital_rate',
                 label: 'Capital Expenses',
-                value: capital_expenses,
+                value: capital_rate,
                 suffix: '%'
               })}
             </CalculatorSection>
-            <CalculatorTotalSection label="Rental Expenses" value={rentalExpenses} prefix="$" />
           </div>
           <div className="m-4">
-            <CalculatorSection title="Rental Information">
+            <CalculatorSection title="Property Expenses">
               {renderInput({
-                id: 'annual_taxes',
-                label: 'Taxes (Annual)',
-                value: annual_taxes,
-                prefix: '$'
+                id: 'tax_rate',
+                label: 'Annual Taxes Rate',
+                value: tax_rate,
+                suffix: '%'
               })}
               {renderInput({
-                id: 'annual_insurance',
-                label: 'Property Insurance (Annual)',
-                value: annual_insurance,
-                prefix: '$'
+                id: 'insurance_rate',
+                label: 'Annual Insurance Rate',
+                value: insurance_rate,
+                suffix: '%'
+              })}
+              {renderInput({
+                id: 'appreciation_rate',
+                label: 'Appreciation Rate',
+                value: appreciation_rate,
+                suffix: '%'
               })}
             </CalculatorSection>
-          </div>
-          <div className="m-4">
             <CalculatorSection title="Current">
-              <CalculatorTotalSection label="Gross Income" value={grossIncome} prefix="$" />
               <CalculatorTotalSection label="Net Income" value={netIncome} prefix="$" />
-              <CalculatorTotalSection label="CoC Return" value={cocReturn} suffix="%" />
+              <CalculatorTotalSection label="Appreciation" value={appreciation} prefix="$" />
+              <CalculatorTotalSection label="Rental Income" value={rentalIncome} prefix="$" />
             </CalculatorSection>
           </div>
         </div>
       </form>
-      <Bar options={chartOptions} data={chartData} />
+      <div className="space-y-6">
+        {chartData.map(values => (
+          <Bar key={values.options.plugins.title.text} {...values} />
+        ))}
+      </div>
     </>
   )
 }

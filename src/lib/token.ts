@@ -29,8 +29,6 @@ export const setToken = async (user: any) => {
   const token = await signJWT({ sub: user.id }, { exp: `${JWT_EXPIRES_IN}m` })
 
   const tokenMaxAge = parseInt(JWT_EXPIRES_IN) * 60
-  console.log(token)
-  console.log(tokenMaxAge)
   const cookieOptions = {
     name: 'token',
     value: token,

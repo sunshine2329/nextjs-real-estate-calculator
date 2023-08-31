@@ -8,18 +8,16 @@ interface AuthenticatedRequest extends NextRequest {
   }
 }
 
-let redirectToLogin = false
+// let redirectToLogin = false
 export async function middleware(req: NextRequest) {
   let token: string | undefined
-  console.log(req.nextUrl.pathname)
-  console.log(req.cookies)
   if (req.cookies.has('token')) {
     token = req.cookies.get('token')?.value
   } else if (req.headers.get('Authorization')?.startsWith('Bearer ')) {
     token = req.headers.get('Authorization')?.substring(7)
   }
 
-  if (req.nextUrl.pathname.startsWith('/login') && (!token || redirectToLogin)) return
+  // if (req.nextUrl.pathname.startsWith('/login') && (!token || redirectToLogin)) return
 
   if (
     !token &&
@@ -30,7 +28,6 @@ export async function middleware(req: NextRequest) {
   }
 
   const response = NextResponse.next()
-  console.log(token)
   if (token) {
     try {
       const { sub } = await verifyJWT<{ sub: string }>(token)
@@ -39,7 +36,7 @@ export async function middleware(req: NextRequest) {
     } catch (error: any) {
       console.log(error)
       let errorResponse: NextResponse
-      redirectToLogin = true
+      // redirectToLogin = true
       if (req.nextUrl.pathname.startsWith('/api')) {
         errorResponse = getErrorResponse(401, "Token is invalid or user doesn't exists")
       } else {
@@ -63,20 +60,13 @@ export async function middleware(req: NextRequest) {
     )
   }
 
-  if (req.url.includes('/login') && authUser) {
-    return NextResponse.redirect(new URL('/profile', req.url))
-  }
+  // if (req.url.includes('/login') && authUser) {
+  //   return NextResponse.redirect(new URL('/profile', req.url))
+  // }
 
   return response
 }
 
 export const config = {
-  matcher: [
-    '/profile',
-    '/reports/:path*',
-    '/login',
-    '/api/users/:path*',
-    '/api/reports/:path*',
-    '/api/auth/logout'
-  ]
+  matcher: ['/api/users/:path*', '/api/reports/:path*', '/api/auth/logout']
 }

@@ -6,8 +6,6 @@ api.setConfigure({
   baseURL: process.env.BASE_URL!,
   headers: { common: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' } }
 })
-console.log('RootLayout')
-console.log(process.env.BASE_URL!)
 
 type User = {
   email: string
