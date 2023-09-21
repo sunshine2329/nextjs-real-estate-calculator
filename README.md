@@ -41,6 +41,8 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 ## Calculations for Real Estate
 
+Refer to <https://www.calculator.net/rental-property-calculator.html>
+
 1. Net Income
 2. Appreciation
 3. Future Rental Income
