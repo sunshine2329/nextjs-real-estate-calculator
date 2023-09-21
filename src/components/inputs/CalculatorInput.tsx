@@ -20,7 +20,7 @@ const CalculatorInput = React.forwardRef<JSX.Element, TCalculatorInputProps>((pr
     label,
     error,
     id,
-    required,
+    // required,
     labelClassName,
     inputClassName,
     prefix,
@@ -32,24 +32,28 @@ const CalculatorInput = React.forwardRef<JSX.Element, TCalculatorInputProps>((pr
       {label && (
         <label
           htmlFor={id}
-          className={classNames('text-sm font-semibold', { 'text-red-500': error }, labelClassName)}
+          className={classNames(
+            'text-sm font-semibold ml-2',
+            { 'text-red-500': error },
+            labelClassName
+          )}
         >
           {label}
-          {required && '*'}
+          {/* {required && '*'} */}
         </label>
       )}
       <NumericFormat
         id={id}
         getInputRef={ref}
         className={classNames(
-          'p-2 border border-gray-300 rounded-lg focus:outline-none focus:border_gray-600 text-right',
+          'p-2 border outline-gray-300 rounded-lg focus:outline-blue-600 text-right',
           { 'border-red-500 focus:border_red_600': error },
           inputClassName
         )}
         // format={format}
         prefix={prefix}
         suffix={suffix}
-        decimalScale={2}
+        decimalScale={prefix === '$' ? 2 : 0}
         fixedDecimalScale
         thousandSeparator=","
         {...rest}

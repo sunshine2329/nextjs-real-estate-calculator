@@ -1,3 +1,4 @@
+'use client'
 import { Header } from '@/components'
 
 const ProtectedLayout = ({ children }: { children: React.ReactNode }) => {

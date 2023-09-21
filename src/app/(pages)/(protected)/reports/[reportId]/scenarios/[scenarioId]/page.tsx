@@ -1,6 +1,6 @@
 'use client'
 
-import { ContainerWithPageTitle, FinancialReport } from '@/components'
+import { ContainerWithPageTitle, FinancialScenario } from '@/components'
 import { TFinancialReportValues } from '@/components/reports/types'
 import api from '@/lib/api'
 import { useEffect, useState } from 'react'
@@ -36,7 +36,9 @@ const ScenarioPage = ({
   return (
     <ContainerWithPageTitle title={'Scenario'} toRedirect={`/reports/${reportId}`}>
       {!data && <p>No Data</p>}
-      {data && <FinancialReport reportId={reportId} scenarioId={scenarioId} initialValues={data} />}
+      {data && (
+        <FinancialScenario reportId={reportId} scenarioId={scenarioId} initialValues={data} />
+      )}
     </ContainerWithPageTitle>
   )
 }

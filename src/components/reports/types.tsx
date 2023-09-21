@@ -1,16 +1,43 @@
 export type TFinancialReportValues = {
   name: string
+
+  // Purchase Information
   purchase_price: number
-  gross_annual_income: number
-  rental_increase: number
-  expenses_increase: number
-  tax_rate: number
-  insurance_rate: number
-  maintenance_rate: number
-  management_rate: number
+  use_loan: boolean
+  down_payment: number
+  interest_rate: number
+  loan_term: number
+  closing_cost: number
+  need_repairs: boolean
+  repair_cost: number
+  value_after_repairs: number
+
+  // Income
+  monthly_rent: number
+  annual_increase_monthly_rent: number
+  other_monthly_income: number
+  annual_increase_other_monthly_income: number
   vacancy_rate: number
-  capital_rate: number
-  appreciation_rate: number
+  management_fee: number
+
+  // Recurring Operating Expenses
+  property_tax: number
+  annual_increase_property_tax: number
+  total_insurance: number
+  annual_increase_total_insurance: number
+  hoa_fee: number
+  annual_increase_hoa_fee: number
+  maintenance: number
+  annual_increase_maintenance: number
+  other_costs: number
+  annual_increase_other_costs: number
+
+  // Sell
+  know_sell_price: boolean
+  sell_price: number
+  value_appreciation: number
+  holding_length: number
+  cost_to_sell: number
 }
 
 export type TFinancialReportProps = {
@@ -26,15 +53,24 @@ export type TScenarioValues = TFinancialReportValues & {
 export type ColumnDef<T> = {
   header: string //header Text
   accessorKey: keyof T //key for how to get the value
-  width: number // column width
+  width?: number // column width
   isPinned?: boolean //column pinned state
   prefix?: string
   suffix?: string
 }
-
-export type TReportColumns = TScenarioValues & {
-  no: number
+export type TScenarioCalculations = {
   netIncome: number
   appreciation: number
-  rentalIncome: number
+  rentalRateIncrease: number
 }
+
+export type TReportTableData = TScenarioCalculations &
+  TScenarioValues & {
+    no: number
+  }
+
+export type TReportData = TScenarioCalculations & {
+  chartData: any
+}
+
+export type TChartData = TScenarioCalculations & { name: string }

@@ -29,7 +29,7 @@ const Input = React.forwardRef<HTMLInputElement, TInputProps>((props, ref) => {
         id={id}
         ref={ref}
         className={classNames(
-          'p-2 border border-gray-300 rounded-lg focus:outline-none focus:border_gray-600',
+          'p-2 border outline-gray-300 rounded-lg focus:outline-blue-600',
           { 'border-red-500 focus:border_red_600': error },
           inputClassName
         )}

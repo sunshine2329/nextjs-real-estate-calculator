@@ -4,8 +4,7 @@ import {
   ContainerWithPageTitle,
   Address,
   Button,
-  ReportTable,
-  ReportChart
+  FinancialReport
 } from '@/components'
 import api from '@/lib/api'
 import Link from 'next/link'
@@ -30,6 +29,7 @@ const ReportPage = ({ params: { reportId } }: { params: { reportId: string } }) 
 
   useEffect(() => {
     getReports()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const renderActions = () => (
@@ -38,15 +38,13 @@ const ReportPage = ({ params: { reportId } }: { params: { reportId: string } }) 
     </Link>
   )
 
-  console.log(data)
   return (
     <ContainerWithPageTitle title="Report" actions={renderActions()} toRedirect="/reports">
       {loading && <p>Loading...</p>}
       {!loading && data && (
         <CalculatorSection title="Property Information" className="bg-transparent">
           <Address reportId={reportId} initialValues={data.address} />
-          <ReportTable reportId={reportId} scenarios={data.scenarios} />
-          <ReportChart scenarios={data.scenarios} />
+          <FinancialReport reportId={reportId} scenarios={data.scenarios} />
         </CalculatorSection>
       )}
       {!loading && !data && <p>Not Found Data.</p>}
