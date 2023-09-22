@@ -15,7 +15,6 @@ const CalculatorSubSection = ({
   children?: React.ReactNode
 }) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(e.target)
     onChange(e.target.checked)
   }
   return (

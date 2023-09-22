@@ -224,7 +224,7 @@ const FinancialScenario = ({
                       id: 'loan_term',
                       label: 'Loan Term',
                       value: loan_term,
-                      suffix: 'years'
+                      suffix: ' years'
                     })}
                   </>
                 )}
@@ -395,7 +395,7 @@ const FinancialScenario = ({
                 id: 'holding_length',
                 label: 'Holding Length',
                 value: holding_length,
-                suffix: 'years'
+                suffix: ' years'
               })}
               {renderInput({
                 id: 'cost_to_sell',
