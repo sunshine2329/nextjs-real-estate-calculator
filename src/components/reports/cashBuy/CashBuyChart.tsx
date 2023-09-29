@@ -9,9 +9,9 @@ import {
   Legend
 } from 'chart.js'
 import { Bar } from 'react-chartjs-2'
-import { TScenarioCalculations } from './types'
 import { useMemo } from 'react'
 import { generateRandomColor } from '@/helpers'
+import { TCashBuyCalculations } from '@/types'
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
@@ -30,7 +30,7 @@ export const options = {
   }
 }
 
-const ReportChart = ({ values = [] }: { values: (TScenarioCalculations & { name: string })[] }) => {
+const CashBuyChart = ({ values = [] }: { values: (TCashBuyCalculations & { name: string })[] }) => {
   const data = useMemo(() => {
     if (colors.length < values.length) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -55,4 +55,4 @@ const ReportChart = ({ values = [] }: { values: (TScenarioCalculations & { name:
   return <Bar options={options} data={data} />
 }
 
-export default ReportChart
+export default CashBuyChart

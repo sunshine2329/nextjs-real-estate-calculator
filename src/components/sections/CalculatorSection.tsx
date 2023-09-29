@@ -5,7 +5,7 @@ const CalculatorSection = ({
   children
 }: {
   className?: string
-  title: string
+  title: string | React.ReactNode
   children: React.ReactNode
 }) => {
   return (

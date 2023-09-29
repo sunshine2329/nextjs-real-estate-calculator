@@ -1,7 +1,7 @@
 'use client'
 import Link from 'next/link'
 import NavItem from './NavItem'
-import { useAuthState } from '@/providers/AuthProvider'
+import { useAuthState } from '@/providers/auth'
 
 const Header = () => {
   const { authenticated } = useAuthState()
@@ -9,7 +9,7 @@ const Header = () => {
     <div className="bg-white border-b shadow-sm sticky top-0 z-40">
       <header className="flex justify-between items-center px-10 mx-auto">
         <Link href={'/'}>
-          <h1>Nextjs auth</h1>
+          <h1>Next js Real Estate Calculator</h1>
         </Link>
         <div>
           <ul className="flex space-x-10">

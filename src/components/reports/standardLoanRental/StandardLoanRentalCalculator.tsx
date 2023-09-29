@@ -6,14 +6,9 @@ import {
   CalculatorSection,
   CalculatorSubSection,
   CalculatorTotalSection,
-  Input,
   TCalculatorInputProps
 } from '@/components'
-import { useRouter } from 'next/navigation'
-import React, { useState, useTransition } from 'react'
-import { toast } from 'react-hot-toast'
-import { TFinancialReportProps, TFinancialReportValues } from './types'
-import api from '@/lib/api'
+import React, { useState } from 'react'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -25,10 +20,12 @@ import {
 } from 'chart.js'
 import { Bar } from 'react-chartjs-2'
 import defaultInitialValues from './defaultInitialValues'
-import useReportData from './useReportData'
+import useStandardLoanRentalData from './useStandardLoanRentalData'
+import { TScenarioParams, TStandardLoanRental } from '@/types'
+import useStandardLoanRental from '@/providers/reports/useStandardLoanRental'
 
 type TRenderInputProps = TCalculatorInputProps & {
-  id: keyof TFinancialReportValues
+  id: keyof TStandardLoanRental
   label?: string
   prefix?: string
   suffix?: string
@@ -37,18 +34,14 @@ type TRenderInputProps = TCalculatorInputProps & {
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
-const FinancialScenario = ({
+const StandardLoanRentalCalculator = ({
   reportId,
   scenarioId,
+  calculatorId,
   initialValues = defaultInitialValues
-}: TFinancialReportProps) => {
-  const router = useRouter()
-  const [isPending, startTransition] = useTransition()
-  const [loading, setLoading] = useState<boolean>(false)
-  const isMutating = isPending || loading
-  const [values, setValues] = useState<TFinancialReportValues>(initialValues)
+}: TScenarioParams & { calculatorId: string; initialValues: TStandardLoanRental }) => {
+  const [values, setValues] = useState<TStandardLoanRental>(initialValues)
   const {
-    name,
     purchase_price,
     use_loan,
     down_payment,
@@ -87,64 +80,34 @@ const FinancialScenario = ({
     cost_to_sell
   } = values
 
-  const { chartData, netIncome, appreciation, rentalRateIncrease } = useReportData(values)
+  const { chartData, netIncome, appreciation, rentalRateIncrease } =
+    useStandardLoanRentalData(values)
+  const { saving, saveStandardLoanRental } = useStandardLoanRental({
+    reportId,
+    scenarioId,
+    type: 'standard_loan_rental',
+    calculatorId: calculatorId
+  })
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    try {
-      setLoading(true)
-      const data = { ...values }
-      if (!data.use_loan) {
-        data.down_payment = 0
-        data.interest_rate = 0
-        data.loan_term = 0
-      }
-      if (!data.need_repairs) {
-        data.repair_cost = 0
-        data.value_after_repairs = 0
-      }
-
-      if (data.know_sell_price) {
-        data.value_appreciation = 0
-      } else {
-        data.sell_price = 0
-      }
-      if (scenarioId)
-        await api.put(`/api/reports/${reportId}/scenarios/${scenarioId}`, {
-          ...data
-        })
-      else
-        await api.post(`/api/reports/${reportId}/scenarios`, {
-          ...data
-        })
-      startTransition(() => {
-        router.refresh()
-        if (scenarioId) router.back()
-        else router.push(`/reports/${reportId}`)
-      })
-    } catch (error: any) {
-      console.log('Save failed', error.message)
-      toast.error(error.message)
-    } finally {
-      setLoading(false)
+    const data = { ...values }
+    if (!data.use_loan) {
+      data.down_payment = 0
+      data.interest_rate = 0
+      data.loan_term = 0
     }
-  }
-  const handleRemove = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault()
-    try {
-      setLoading(true)
-
-      await api.delete(`/api/reports/${reportId}/scenarios/${scenarioId}`)
-      startTransition(() => {
-        router.refresh()
-        router.back()
-      })
-    } catch (error: any) {
-      console.log('Save failed', error.message)
-      toast.error(error.message)
-    } finally {
-      setLoading(false)
+    if (!data.need_repairs) {
+      data.repair_cost = 0
+      data.value_after_repairs = 0
     }
+
+    if (data.know_sell_price) {
+      data.value_appreciation = 0
+    } else {
+      data.sell_price = 0
+    }
+    saveStandardLoanRental(data)
   }
   const renderInput = ({ id, label, prefix, suffix, value }: TRenderInputProps) => (
     // disable-eslint
@@ -159,7 +122,7 @@ const FinancialScenario = ({
         setValues(prevState => ({ ...prevState, [id]: values.floatValue }))
       }}
       valueIsNumericString
-      disabled={isMutating}
+      disabled={saving}
     />
   )
   const renderInputWithIncrease = (
@@ -173,22 +136,11 @@ const FinancialScenario = ({
   )
   return (
     <>
-      <form className="w-fit flex-col space-y-4 m-auto mt-10" onSubmit={handleSubmit}>
-        <div className="flex space-x-4 items-end mx-2">
-          <Input
-            label="Scenario Name"
-            id="name"
-            value={name}
-            onChange={e => setValues(prevState => ({ ...prevState, name: e.target.value }))}
-          />
-          <Button type="submit" loading={isMutating}>
-            Save
+      <form className="w-fit flex-col space-y-4 m-auto mt-10 relative" onSubmit={handleSubmit}>
+        <div className="absolute mt-[-60px] right-0">
+          <Button type="submit" loading={saving}>
+            {calculatorId ? 'Save' : 'Add'}
           </Button>
-          {scenarioId && (
-            <Button type="button" loading={isMutating} onClick={handleRemove}>
-              Delete
-            </Button>
-          )}
         </div>
         <div className="flex flex-wrap mx-auto justify-center">
           <div className="m-4">
@@ -427,4 +379,4 @@ const FinancialScenario = ({
   )
 }
 
-export default FinancialScenario
+export default StandardLoanRentalCalculator

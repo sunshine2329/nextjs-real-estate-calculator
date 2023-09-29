@@ -31,3 +31,13 @@ export function getErrorResponse(
     }
   )
 }
+
+export function getError(error: any, message?: string) {
+  if (typeof error === 'string') {
+    return getErrorResponse(500, error)
+  }
+  if (error instanceof ZodError) {
+    return getErrorResponse(400, message!, error)
+  }
+  return getErrorResponse(500, error.message)
+}

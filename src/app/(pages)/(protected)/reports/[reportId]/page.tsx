@@ -4,32 +4,30 @@ import {
   ContainerWithPageTitle,
   Address,
   Button,
-  FinancialReport
+  CalculatorTypes
 } from '@/components'
-import api from '@/lib/api'
+import CashBuyReport from '@/components/reports/cashBuy/CashBuyReport'
+import StandardLoanRentalReport from '@/components/reports/standardLoanRental/StandardLoanRentalReport'
+import useReport from '@/providers/reports/useReport'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
-import { toast } from 'react-hot-toast'
+import { useEffect } from 'react'
 
 const ReportPage = ({ params: { reportId } }: { params: { reportId: string } }) => {
-  const [data, setData] = useState<any>(null)
-  const [loading, setLoading] = useState(false)
-  const getReports = async () => {
-    try {
-      setLoading(true)
-      const response = await api.get(`/api/reports/${reportId}`)
-      setData(response.data.data)
-    } catch (error: any) {
-      console.log('Loading reports', error.message)
-      toast.error(error.message)
-    } finally {
-      setLoading(false)
-    }
-  }
-
+  const {
+    report,
+    type,
+    scenarios,
+    cashBuys,
+    standardLoanRentals,
+    changeCalculator,
+    loading,
+    mutate
+  } = useReport({ reportId })
+  console.log(scenarios)
+  console.log(cashBuys)
+  console.log(standardLoanRentals)
   useEffect(() => {
-    getReports()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    mutate()
   }, [])
 
   const renderActions = () => (
@@ -37,17 +35,28 @@ const ReportPage = ({ params: { reportId } }: { params: { reportId: string } }) 
       <Button color="default">Add Scenario</Button>
     </Link>
   )
-
   return (
     <ContainerWithPageTitle title="Report" actions={renderActions()} toRedirect="/reports">
       {loading && <p>Loading...</p>}
-      {!loading && data && (
-        <CalculatorSection title="Property Information" className="bg-transparent">
-          <Address reportId={reportId} initialValues={data.address} />
-          <FinancialReport reportId={reportId} scenarios={data.scenarios} />
-        </CalculatorSection>
+      {!loading && report && (
+        <>
+          <CalculatorSection title="Property Information" className="bg-transparent">
+            <Address reportId={reportId} initialValues={report.address} />
+          </CalculatorSection>
+          <CalculatorTypes type={type} changeCalculator={changeCalculator} />
+          {type === 'cash_buy' && (
+            <CashBuyReport reportId={reportId} scenarios={scenarios} cashBuys={cashBuys} />
+          )}
+          {type === 'standard_loan_rental' && (
+            <StandardLoanRentalReport
+              reportId={reportId}
+              scenarios={scenarios}
+              standardLoanRentals={standardLoanRentals}
+            />
+          )}
+        </>
       )}
-      {!loading && !data && <p>Not Found Data.</p>}
+      {!loading && !report && <p>Not Found Data.</p>}
     </ContainerWithPageTitle>
   )
 }

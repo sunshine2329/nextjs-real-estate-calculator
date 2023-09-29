@@ -1,43 +1,41 @@
 'use client'
 
-import { ContainerWithPageTitle, FinancialScenario } from '@/components'
-import { TFinancialReportValues } from '@/components/reports/types'
-import api from '@/lib/api'
+import { CalculatorTypes, ContainerWithPageTitle, ScenarioName } from '@/components'
+import CashBuyCalculator from '@/components/reports/cashBuy/CashBuyCalculator'
+import StandardLoanRentalCalculator from '@/components/reports/standardLoanRental/StandardLoanRentalCalculator'
+import useScenario from '@/providers/reports/useScenario'
+import { TCalculator, TScenarioParams } from '@/types'
 import { useEffect, useState } from 'react'
-import { toast } from 'react-hot-toast'
 
-const ScenarioPage = ({
-  params: { reportId, scenarioId }
-}: {
-  params: { reportId: string; scenarioId: string }
-}) => {
-  const [data, setData] = useState<TFinancialReportValues | null>(null)
-  const [loading, setLoading] = useState(false)
-  const getScenario = async () => {
-    try {
-      setLoading(true)
-      const response = await api.get(`/api/reports/${reportId}/scenarios/${scenarioId}`)
-      setData(response.data.data)
-    } catch (error: any) {
-      console.log('Loading reports', error.message)
-      toast.error(error.message)
-    } finally {
-      setLoading(false)
-    }
-  }
-
+const ScenarioPage = ({ params }: { params: TScenarioParams }) => {
+  const { scenario, cashBuy, standardLoanRental, loading, mutate } = useScenario(params)
+  const [type, setType] = useState<TCalculator>('cash_buy')
   useEffect(() => {
-    getScenario()
+    mutate()
   }, [])
-
   if (loading) {
     return <p>loading...</p>
   }
   return (
-    <ContainerWithPageTitle title={'Scenario'} toRedirect={`/reports/${reportId}`}>
-      {!data && <p>No Data</p>}
-      {data && (
-        <FinancialScenario reportId={reportId} scenarioId={scenarioId} initialValues={data} />
+    <ContainerWithPageTitle title={'Scenario'} toRedirect={`/reports/${params.reportId}`}>
+      {!loading && !scenario && <p>No Data</p>}
+      {!loading && scenario && <ScenarioName params={params} scenario={scenario} />}
+      <CalculatorTypes type={type} changeCalculator={setType} />
+      {type === 'cash_buy' && (
+        <CashBuyCalculator
+          reportId={params.reportId}
+          scenarioId={params.scenarioId}
+          calculatorId={cashBuy ? cashBuy._id : null}
+          initialValues={cashBuy}
+        />
+      )}
+      {type === 'standard_loan_rental' && (
+        <StandardLoanRentalCalculator
+          reportId={params.reportId}
+          scenarioId={params.scenarioId}
+          calculatorId={standardLoanRental ? standardLoanRental._id : null}
+          initialValues={standardLoanRental}
+        />
       )}
     </ContainerWithPageTitle>
   )

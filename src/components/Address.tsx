@@ -1,18 +1,9 @@
 'use client'
 import { Input, Button } from '@/components'
 import { StringKeys, capitalizeFirstLetter } from '@/helpers'
-import api from '@/lib/api'
-import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import useAddress from '@/providers/reports/useAddress'
+import { TAddressValues } from '@/types'
 import { Resolver, SubmitHandler, useForm } from 'react-hook-form'
-import { toast } from 'react-hot-toast'
-
-export type TAddressValues = {
-  street: string
-  city: string
-  state: string
-  postal_code: string
-}
 
 type TAddressProps = {
   reportId?: string
@@ -42,28 +33,14 @@ const resolver: Resolver<TAddressValues> = async values => {
 }
 
 const Address = ({ reportId, initialValues }: TAddressProps) => {
-  const router = useRouter()
-  const [loading, setLoading] = useState<boolean>(false)
+  const { saving, saveAddress } = useAddress({ reportId })
   const {
     register,
     handleSubmit,
     formState: { errors }
   } = useForm<TAddressValues>({ resolver, defaultValues: { ...initialValues } })
-  const onSubmit: SubmitHandler<TAddressValues> = async data => {
-    try {
-      setLoading(true)
 
-      let response: any
-      if (reportId) response = await api.put(`/api/reports/${reportId}`, { address: data })
-      else response = await api.post(`/api/reports`, { address: data })
-      !reportId && router.push(`/reports/${response.data.data._id}`)
-    } catch (error: any) {
-      console.log('Save failed', error.message)
-      toast.error(error.message)
-    } finally {
-      setLoading(false)
-    }
-  }
+  const onSubmit: SubmitHandler<TAddressValues> = async data => await saveAddress(data)
 
   const renderInput = (id: keyof TAddressValues) => (
     <Input
@@ -75,7 +52,7 @@ const Address = ({ reportId, initialValues }: TAddressProps) => {
       error={errors[id]?.message}
       required
       placeholder={capitalizeFirstLetter(id)}
-      disabled={loading}
+      disabled={saving}
     />
   )
 
@@ -86,7 +63,7 @@ const Address = ({ reportId, initialValues }: TAddressProps) => {
     >
       <h3 className="whitespace-nowrap">Property Address</h3>
       {keysOfFormValues.map(key => renderInput(key))}
-      <Button type="submit" loading={loading}>
+      <Button type="submit" loading={saving}>
         Save
       </Button>
     </form>

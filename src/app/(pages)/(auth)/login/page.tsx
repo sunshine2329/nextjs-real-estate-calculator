@@ -2,7 +2,7 @@
 
 import { AuthContainer, Button, Input } from '@/components'
 import api from '@/lib/api'
-import { useAuthDispatch } from '@/providers/AuthProvider'
+import { useAuthDispatch } from '@/providers/auth'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { useForm, Resolver, SubmitHandler } from 'react-hook-form'

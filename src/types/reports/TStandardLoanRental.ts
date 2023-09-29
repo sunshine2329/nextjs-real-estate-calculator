@@ -1,6 +1,5 @@
-export type TFinancialReportValues = {
-  name: string
-
+import { TObject } from './TObject'
+type TStandardLoanRental = TObject & {
   // Purchase Information
   purchase_price: number
   use_loan: boolean
@@ -40,37 +39,18 @@ export type TFinancialReportValues = {
   cost_to_sell: number
 }
 
-export type TFinancialReportProps = {
-  reportId: string
-  scenarioId?: string
-  initialValues?: TFinancialReportValues
-}
-export type TScenarioValues = TFinancialReportValues & {
-  _id: string
-  created: string
-}
-
-export type ColumnDef<T> = {
-  header: string //header Text
-  accessorKey: keyof T //key for how to get the value
-  width?: number // column width
-  isPinned?: boolean //column pinned state
-  prefix?: string
-  suffix?: string
-}
-export type TScenarioCalculations = {
+export type TStandardLoanRentalCalculations = {
   netIncome: number
   appreciation: number
   rentalRateIncrease: number
 }
 
-export type TReportTableData = TScenarioCalculations &
-  TScenarioValues & {
+export type TStandardLoanRentalTableData = TStandardLoanRentalCalculations &
+  TStandardLoanRental & {
     no: number
+    name: string
   }
 
-export type TReportData = TScenarioCalculations & {
-  chartData: any
-}
+export type TStandardLoanRentalChartData = TStandardLoanRentalCalculations & { name: string }
 
-export type TChartData = TScenarioCalculations & { name: string }
+export default TStandardLoanRental

@@ -6,7 +6,7 @@ import { toast } from 'react-hot-toast/headless'
 import { Button, Spinner } from '@/components'
 import { useRouter } from 'next/navigation'
 import api from '@/lib/api'
-import { useAuthDispatch, useAuthState } from '@/providers/AuthProvider'
+import { useAuthDispatch, useAuthState } from '@/providers/auth'
 
 const ProfilePage = () => {
   const [loggingOut, setLoggingOut] = useState(false)

@@ -1,90 +1,59 @@
 import { connect } from '@/dbConfig/dbConfig'
 import { NextRequest, NextResponse } from 'next/server'
-import Report from '@/models/reportModel'
+import Scenario from '@/models/scenarioModel'
+import CashBuy from '@/models/cashBuyModel'
+import StandardLoanRental from '@/models/standardLoanRentalModel'
+import { TScenarioParams } from '@/types'
+import { getScenario } from '@/lib/reports'
+import { getError } from '@/lib'
 
 connect()
 
-export async function GET(
-  req: NextRequest,
-  { params }: { params: { reportId: string; scenarioId: string } }
-) {
+export async function GET(req: NextRequest, { params }: { params: TScenarioParams }) {
   try {
-    const reportId = params.reportId
-    const scenarioId = params.scenarioId
-    const report = await Report.findById(reportId)
-    if (!report) {
-      return NextResponse.json({ error: 'Not found report' }, { status: 400 })
-    }
-
-    const scenario = report.scenarios.filter((item: any) => String(item._id) === scenarioId)[0]
-
-    if (!scenario) {
-      return NextResponse.json({ error: 'Not found scenario' }, { status: 400 })
-    }
-
+    const { scenario } = await getScenario(params)
+    const cashBuy = await CashBuy.findById(scenario.cash_buy)
+    const standardLoanRental = await StandardLoanRental.findById(scenario.standard_loan_rental)
     return NextResponse.json({
       success: true,
-      data: scenario
+      data: { scenario, cash_buy: cashBuy, standard_loan_rental: standardLoanRental }
     })
   } catch (error: any) {
-    console.log(error)
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    return getError(error)
   }
 }
 
-export async function PUT(
-  req: NextRequest,
-  { params }: { params: { reportId: string; scenarioId: string } }
-) {
+export async function PUT(req: NextRequest, { params }: { params: TScenarioParams }) {
   try {
-    const reqBody = await req.json()
-    const reportId = params.reportId
-    const scenarioId = params.scenarioId
-    const report = await Report.findById(reportId)
-    if (!report) {
-      return NextResponse.json({ error: 'Not found report' }, { status: 400 })
-    }
+    const { name } = await req.json()
+    const { scenario } = await getScenario(params)
+    scenario.override({ name })
+    const savedScenario = await scenario.save()
 
-    const index = report.scenarios.findIndex((item: any) => String(item._id) === scenarioId)
-
-    if (index === -1) {
-      return NextResponse.json({ error: 'Not found scenario' }, { status: 400 })
-    }
-
-    report.scenarios[index].overwrite({ ...reqBody })
-
-    const savedReport = await report.save()
     return NextResponse.json({
+      message: 'Scenario updated successfully',
       success: true,
-      data: savedReport.scenarios[index]
+      data: { scenario: savedScenario }
     })
   } catch (error: any) {
-    console.log(error)
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    return getError(error)
   }
 }
 
-export async function DELETE(
-  req: NextRequest,
-  { params }: { params: { reportId: string; scenarioId: string } }
-) {
+export async function DELETE(req: NextRequest, { params }: { params: TScenarioParams }) {
   try {
-    const reportId = params.reportId
-    const scenarioId = params.scenarioId
-    const report = await Report.findById(reportId)
-    if (!report) {
-      return NextResponse.json({ error: 'Not found report' }, { status: 400 })
-    }
-
-    const index = report.scenarios.findIndex((item: any) => String(item._id) === scenarioId)
-
-    if (index === -1) {
-      return NextResponse.json({ error: 'Not found scenario' }, { status: 400 })
-    }
+    const { report, scenario, index } = await getScenario(params)
 
     report.scenarios.splice(index, 1)
 
     await report.save()
+
+    if (scenario.cash_buy) await CashBuy.deleteOne({ _id: scenario.cash_buy })
+    if (scenario.standard_loan_rental)
+      await StandardLoanRental.deleteOne({ _id: scenario.standard_loan_rental })
+
+    await Scenario.deleteOne({ _id: params.scenarioId })
+
     return NextResponse.json({
       message: 'successfully removed',
       success: true

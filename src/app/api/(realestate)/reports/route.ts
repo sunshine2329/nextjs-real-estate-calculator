@@ -6,8 +6,7 @@ connect()
 
 export async function POST(req: NextRequest) {
   try {
-    const reqBody = await req.json()
-    const { address } = reqBody
+    const { address } = await req.json()
 
     // check if report already exists
     const report = await Report.findOne({ address })
@@ -23,7 +22,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       message: 'Report created successfully',
       success: true,
-      data: savedReport
+      data: { report: savedReport }
     })
   } catch (error: any) {
     console.log(error)
@@ -37,7 +36,7 @@ export async function GET() {
     return NextResponse.json({
       message: 'successfully loaded',
       success: true,
-      data: reports
+      data: { reports }
     })
   } catch (error: any) {
     console.log(error)

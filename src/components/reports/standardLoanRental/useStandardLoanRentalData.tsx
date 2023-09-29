@@ -1,12 +1,15 @@
 import { useMemo } from 'react'
-import getFinancialCalculations from './calculateFinancialInvestment'
-import { TFinancialReportValues, TReportData } from './types'
+import getStandardLoanRentalCalculations from './getStandardLoanRentalCalculations'
+import { TStandardLoanRental, TStandardLoanRentalCalculations } from '@/types'
 
-const useReportData = (values: TFinancialReportValues): TReportData =>
+type TStandardLoanRentalData = TStandardLoanRentalCalculations & {
+  chartData: any
+}
+const useReportData = (values: TStandardLoanRental): TStandardLoanRentalData =>
   useMemo(() => {
     const currentYear = new Date().getFullYear()
     const arr = Array.from(Array(30).keys())
-    const data = arr.map(i => getFinancialCalculations({ ...values, holding_length: i }))
+    const data = arr.map(i => getStandardLoanRentalCalculations({ ...values, holding_length: i }))
     const chartOptions = (title: string) => ({
       responsive: true,
       plugins: {
@@ -45,7 +48,7 @@ const useReportData = (values: TFinancialReportValues): TReportData =>
         }
       }
     ]
-    return { chartData, ...getFinancialCalculations(values) }
+    return { chartData, ...getStandardLoanRentalCalculations(values) }
   }, [values])
 
 export default useReportData

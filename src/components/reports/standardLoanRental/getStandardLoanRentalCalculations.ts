@@ -1,4 +1,4 @@
-import { TFinancialReportValues, TScenarioCalculations } from './types'
+import { TStandardLoanRental, TStandardLoanRentalCalculations } from '@/types'
 
 const calculateNetOperatingIncome = (
   monthlyRent: number,
@@ -25,44 +25,49 @@ const calculateNetOperatingIncome = (
   const otherIncome = yearsOtherIncome.reduce((acc, yr) => acc + yr * 12, 0)
   return rentalIncome + otherIncome
 }
-const calculateFinancialInvestment = ({
-  purchase_price,
-  use_loan,
-  down_payment,
-  interest_rate,
-  loan_term,
-  closing_cost,
-  need_repairs,
-  repair_cost,
-  value_after_repairs,
+const getStandardLoanRentalCalculations = (
+  data: TStandardLoanRental
+): TStandardLoanRentalCalculations => {
+  if (!data) return { netIncome: 0, appreciation: 0, rentalRateIncrease: 0 }
 
-  // Income
-  monthly_rent,
-  annual_increase_monthly_rent,
-  other_monthly_income,
-  annual_increase_other_monthly_income,
-  vacancy_rate,
-  management_fee,
+  const {
+    purchase_price,
+    use_loan,
+    down_payment,
+    interest_rate,
+    loan_term,
+    closing_cost,
+    need_repairs,
+    repair_cost,
+    value_after_repairs,
 
-  // Recurring Operating Expenses
-  property_tax,
-  annual_increase_property_tax,
-  total_insurance,
-  annual_increase_total_insurance,
-  hoa_fee,
-  annual_increase_hoa_fee,
-  maintenance,
-  annual_increase_maintenance,
-  other_costs,
-  annual_increase_other_costs,
+    // Income
+    monthly_rent,
+    annual_increase_monthly_rent,
+    other_monthly_income,
+    annual_increase_other_monthly_income,
+    vacancy_rate,
+    management_fee,
 
-  // Sell
-  know_sell_price,
-  sell_price,
-  value_appreciation,
-  holding_length = 1,
-  cost_to_sell
-}: TFinancialReportValues): TScenarioCalculations => {
+    // Recurring Operating Expenses
+    property_tax,
+    annual_increase_property_tax,
+    total_insurance,
+    annual_increase_total_insurance,
+    hoa_fee,
+    annual_increase_hoa_fee,
+    maintenance,
+    annual_increase_maintenance,
+    other_costs,
+    annual_increase_other_costs,
+
+    // Sell
+    know_sell_price,
+    sell_price,
+    value_appreciation,
+    holding_length = 1,
+    cost_to_sell
+  } = data
   // Calculate loan amount if using a loan
   const loanAmount = use_loan ? purchase_price * (1 - down_payment / 100) : 0
 
@@ -130,4 +135,4 @@ const calculateFinancialInvestment = ({
   }
 }
 
-export default calculateFinancialInvestment
+export default getStandardLoanRentalCalculations

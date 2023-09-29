@@ -2,151 +2,103 @@
 
 import { useState } from 'react'
 import classNames from 'classnames'
-import { ColumnDef, TReportTableData } from './types'
-import FinancialReportItem from './FinancialReportItem'
+import { ColumnDef, TCashBuyTableData } from '@/types'
+import CashBuyItem from './CashBuyItem'
 
-const defaultColumns: ColumnDef<TReportTableData>[] = [
+const defaultColumns: ColumnDef<TCashBuyTableData>[] = [
   {
     header: 'No',
     accessorKey: 'no',
-    isPinned: true,
-    width: 40
+    width: 40,
+    isPinned: true
   },
   {
     header: 'Scenario Name',
     accessorKey: 'name',
-    isPinned: true,
-    width: 291
+    width: 120,
+    isPinned: true
   },
   {
     header: 'Purchase Price',
     accessorKey: 'purchase_price',
-    prefix: '$',
-    width: 135
+    width: 150,
+    prefix: '$'
   },
   {
-    header: 'Down Payment',
-    accessorKey: 'down_payment',
-    suffix: '%',
-    width: 135
+    header: 'Gross Annual Income',
+    accessorKey: 'gross_annual_income',
+    width: 200,
+    prefix: '$'
   },
   {
-    header: 'Interest Rate',
-    accessorKey: 'interest_rate',
-    suffix: '%',
-    width: 118
+    header: 'Annual Rental Rate Increase',
+    accessorKey: 'rental_increase',
+    width: 80,
+    suffix: '%'
   },
   {
-    header: 'Loan Term',
-    accessorKey: 'loan_term',
-    suffix: 'years',
-    width: 103
+    header: 'Annual Expenses Rate Increase',
+    accessorKey: 'expenses_increase',
+    width: 180,
+    suffix: '%'
   },
   {
-    header: 'Closing Cost',
-    accessorKey: 'closing_cost',
-    prefix: '$',
-    width: 118
-  },
-  {
-    header: 'Repair Cost',
-    accessorKey: 'repair_cost',
-    prefix: '$',
-    width: 109
-  },
-  {
-    header: 'Value after Repairs',
-    accessorKey: 'value_after_repairs',
-    prefix: '$',
-    width: 166
-  },
-  {
-    header: 'Monthly Rent',
-    accessorKey: 'monthly_rent',
-    prefix: '$',
-    width: 122
-  },
-  {
-    header: 'Other Monthly Income',
-    accessorKey: 'other_monthly_income',
-    prefix: '$',
-    width: 193
+    header: 'Maintenance Expense Rate',
+    accessorKey: 'maintenance_rate',
+    width: 180,
+    suffix: '%'
   },
   {
     header: 'Vacancy Rate',
     accessorKey: 'vacancy_rate',
-    suffix: '%',
-    width: 125
+    width: 150,
+    suffix: '%'
   },
   {
-    header: 'Management Fee',
-    accessorKey: 'management_fee',
-    suffix: '%',
-    width: 153
+    header: 'Capital Rate',
+    accessorKey: 'capital_rate',
+    width: 80,
+    suffix: '%'
   },
   {
-    header: 'Property Tax',
-    accessorKey: 'property_tax',
-    prefix: '$',
-    width: 120
+    header: 'Annual Tax Rate',
+    accessorKey: 'tax_rate',
+    width: 150,
+    suffix: '%'
   },
   {
-    header: 'Total Insurance',
-    accessorKey: 'total_insurance',
-    prefix: '$',
-    width: 140
+    header: 'Annual Insurance Rate',
+    accessorKey: 'insurance_rate',
+    width: 100,
+    suffix: '%'
   },
   {
-    header: 'Maintenance',
-    accessorKey: 'maintenance',
-    prefix: '$',
-    width: 121
+    header: 'Appreciation Rate',
+    accessorKey: 'appreciation_rate',
+    width: 120,
+    suffix: '%'
   },
   {
-    header: 'Other Costs',
-    accessorKey: 'other_costs',
-    prefix: '$',
-    width: 113
-  },
-  {
-    header: 'Sell Price',
-    accessorKey: 'sell_price',
-    prefix: '$',
-    width: 91
-  },
-  {
-    header: 'Value Appreciation',
-    accessorKey: 'value_appreciation',
-    suffix: '%',
-    width: 168
-  },
-  {
-    header: 'Cost to Sell',
-    accessorKey: 'cost_to_sell',
-    suffix: '%',
-    width: 108
-  },
-  {
-    header: 'Net Income Over 30 years',
+    header: 'Net Income',
     accessorKey: 'netIncome',
-    prefix: '$',
-    width: 221
+    width: 150,
+    prefix: '$'
   },
   {
-    header: 'Appreciation over 30 years',
+    header: 'Appreciation',
     accessorKey: 'appreciation',
-    prefix: '$',
-    width: 231
+    width: 180,
+    prefix: '$'
   },
   {
-    header: 'Rental Rate Increase over 30 years',
+    header: 'Rental Rate Increase',
     accessorKey: 'rentalRateIncrease',
-    prefix: '$',
-    width: 290
+    width: 80,
+    prefix: '$'
   }
 ]
 
-const ReportTable = ({ reportId, data = [] }: { reportId: string; data: TReportTableData[] }) => {
+const CashBuyTable = ({ reportId, data = [] }: { reportId: string; data: TCashBuyTableData[] }) => {
   const [columns, setColumns] = useState([...defaultColumns])
 
   const onPinColumn = (accessorKey: string, isPinned: boolean = false) => {
@@ -202,8 +154,8 @@ const ReportTable = ({ reportId, data = [] }: { reportId: string; data: TReportT
           </tr>
         </thead>
         <tbody>
-          {data.map((item: TReportTableData, index: number) => (
-            <FinancialReportItem
+          {data.map((item: TCashBuyTableData, index: number) => (
+            <CashBuyItem
               key={item._id}
               data={item}
               reportId={reportId}
@@ -218,4 +170,4 @@ const ReportTable = ({ reportId, data = [] }: { reportId: string; data: TReportT
   )
 }
 
-export default ReportTable
+export default CashBuyTable

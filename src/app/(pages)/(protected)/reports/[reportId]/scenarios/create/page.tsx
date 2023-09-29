@@ -1,10 +1,12 @@
 'use client'
-import { ContainerWithPageTitle, FinancialScenario } from '@/components'
+import { ContainerWithPageTitle } from '@/components'
+import ScenarioName from '@/components/reports/ScenarioName'
+import { TScenarioParams } from '@/types'
 
-const CreateScenarioPage = ({ params: { reportId } }: { params: { reportId: string } }) => {
+const CreateScenarioPage = ({ params }: { params: TScenarioParams }) => {
   return (
-    <ContainerWithPageTitle title="New Scenario" toRedirect={`/reports/${reportId}`}>
-      <FinancialScenario reportId={reportId} />
+    <ContainerWithPageTitle title="New Scenario" toRedirect={`/reports/${params.reportId}`}>
+      <ScenarioName params={params} />
     </ContainerWithPageTitle>
   )
 }

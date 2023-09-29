@@ -1,6 +1,7 @@
-const defaultInitialValues = {
-  // Scenario Name
-  name: '',
+import { TStandardLoanRental } from '@/types'
+
+const defaultInitialValues: TStandardLoanRental = {
+  _id: '',
   // Purchase Information
   purchase_price: 200000,
   use_loan: true,

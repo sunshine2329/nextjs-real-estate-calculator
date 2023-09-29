@@ -1,26 +1,23 @@
-import { connect } from '@/dbConfig/dbConfig'
 import { NextRequest, NextResponse } from 'next/server'
-import Report from '@/models/reportModel'
+import Scenario from '@/models/scenarioModel'
+import { TReportParams } from '@/types'
+import { getReport } from '@/lib/reports'
+import { getError } from '@/lib'
 
-connect()
-
-export async function POST(req: NextRequest, { params }: { params: { reportId: string } }) {
+export async function POST(req: NextRequest, { params }: { params: TReportParams }) {
   try {
-    const reportId = params.reportId
-    const reqBody = await req.json()
-    const report = await Report.findById(reportId)
-    if (!report) {
-      return NextResponse.json({ error: 'Not found report' }, { status: 400 })
-    }
-    report.scenarios.push(reqBody)
+    const { name } = await req.json()
+    const report = await getReport(params)
+    const scenario = new Scenario({ name })
+    const savedScenario = await scenario.save()
+    report.scenarios.push(savedScenario._id)
     const savedReport = await report.save()
     return NextResponse.json({
-      message: 'Report created successfully',
+      message: 'Scenario created and added to Report successfully',
       success: true,
-      data: savedReport
+      data: { report: savedReport, scenario: savedScenario }
     })
   } catch (error: any) {
-    console.log(error)
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    return getError(error)
   }
 }
