@@ -15,7 +15,6 @@ const useScenario = (params: TScenarioParams) => {
       : undefined
     return { scenario, cashBuy, standardLoanRental }
   }, [cash_buys, scenarioId, scenarios, standard_loan_rentals])
-  console.log(cash_buys)
   return {
     scenario,
     cashBuy,
