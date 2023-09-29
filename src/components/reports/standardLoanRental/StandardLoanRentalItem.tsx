@@ -14,6 +14,7 @@ const StandardLoanRentalItem = ({
   getLeftStickyPos
 }: {
   reportId: string
+  scenarioId: string
   index: number
   data: TStandardLoanRentalTableData
   columns: ColumnDef<TStandardLoanRentalTableData>[]
