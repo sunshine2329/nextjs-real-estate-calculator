@@ -12,11 +12,11 @@ const ScenarioPage = ({ params }: { params: TScenarioParams }) => {
   const [type, setType] = useState<TCalculator>('cash_buy')
   useEffect(() => {
     mutate()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   if (loading && !scenario) {
     return <p>loading...</p>
   }
-  console.log(cashBuy)
   return (
     <ContainerWithPageTitle title={'Scenario'} toRedirect={`/reports/${params.reportId}`}>
       {!loading && !scenario && <p>No Data</p>}

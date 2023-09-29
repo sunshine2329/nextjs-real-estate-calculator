@@ -12,7 +12,7 @@ export async function POST(req: NextRequest, { params }: { params: TCalculatorTy
 
     const reqBody = await req.json()
     delete reqBody._id
-    console.log(params)
+
     let calculation
     switch (type) {
       case 'cash_buy':

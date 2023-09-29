@@ -17,7 +17,6 @@ const ScenarioName = ({
 
   useEffect(() => {
     setName(scenario ? scenario.name : '')
-    console.log(scenario)
   }, [scenario])
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()

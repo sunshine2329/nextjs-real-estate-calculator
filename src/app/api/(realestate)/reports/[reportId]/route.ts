@@ -46,7 +46,7 @@ export async function PUT(req: NextRequest, { params }: { params: TReportParams 
   try {
     const reqBody = await req.json()
     const report = await getReport(params)
-    report.address.overwrite({ ...reqBody.address })
+    report.overwrite({ address: reqBody.address })
     const savedReport = await report.save()
     const relations = await getReportRelations(savedReport)
     return NextResponse.json({

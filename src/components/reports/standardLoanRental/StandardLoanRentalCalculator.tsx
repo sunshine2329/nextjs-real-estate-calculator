@@ -89,7 +89,6 @@ const StandardLoanRentalCalculator = ({
     calculatorId: calculatorId
   })
 
-  console.log(calculatorId)
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const data = { ...values }
