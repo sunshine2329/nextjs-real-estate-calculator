@@ -16,6 +16,7 @@ const useScenarioName = (params: TReportParams | TScenarioParams) => {
   const [saving, setSaving] = useState(false)
   const saveScenarioName = useCallback(
     async (name: string) => {
+      if (saving || isSavePending) return
       try {
         setSaving(true)
         if (scenarioId) {
@@ -46,7 +47,7 @@ const useScenarioName = (params: TReportParams | TScenarioParams) => {
         setSaving(false)
       }
     },
-    [dispatch, params, reportId, router, scenarioId]
+    [dispatch, isSavePending, params, reportId, router, saving, scenarioId]
   )
 
   const [deleting, setDeleting] = useState(false)
@@ -54,7 +55,7 @@ const useScenarioName = (params: TReportParams | TScenarioParams) => {
   const deleteScenario = useCallback(
     async (e: React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault()
-      if (!scenarioId) return
+      if (!scenarioId || deleting || isDeletePending) return
 
       try {
         setDeleting(true)

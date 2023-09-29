@@ -10,6 +10,7 @@ const useReportsData = ({ action, params, fetchData }: any) => {
   const dispatch = useReportsDispatch()
 
   const mutate = useCallback(async () => {
+    if (loading) return
     try {
       setLoading(true)
       setError(null)
@@ -22,7 +23,7 @@ const useReportsData = ({ action, params, fetchData }: any) => {
     } finally {
       setLoading(false)
     }
-  }, [action, dispatch, fetchData, params])
+  }, [action, dispatch, fetchData, loading, params])
 
   return { mutate, loading, error }
 }

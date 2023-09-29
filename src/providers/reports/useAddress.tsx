@@ -14,6 +14,7 @@ const useAddress = ({ reportId }: { reportId?: string }) => {
   const [saving, setSaving] = useState(false)
   const saveAddress = useCallback(
     async (address: TAddressValues) => {
+      if (saving || isSavePending) return
       try {
         setSaving(true)
         if (reportId) {
@@ -44,7 +45,7 @@ const useAddress = ({ reportId }: { reportId?: string }) => {
         setSaving(false)
       }
     },
-    [dispatch, reportId, router]
+    [dispatch, reportId, router, saving]
   )
 
   const [deleting, setDeleting] = useState(false)
@@ -52,7 +53,7 @@ const useAddress = ({ reportId }: { reportId?: string }) => {
   const deleteReport = useCallback(
     async (e: React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault()
-      if (!reportId) return
+      if (!reportId || deleting || isDeletePending) return
 
       try {
         setDeleting(true)
@@ -72,7 +73,7 @@ const useAddress = ({ reportId }: { reportId?: string }) => {
         setDeleting(false)
       }
     },
-    [dispatch, reportId, router]
+    [deleting, dispatch, reportId, router]
   )
   return {
     saving: saving || isSavePending,

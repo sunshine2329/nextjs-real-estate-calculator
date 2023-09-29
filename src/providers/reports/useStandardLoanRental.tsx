@@ -18,6 +18,7 @@ const useStandardLoanRental = (params: TCalculatorTypeParams | TCalculatorParams
   const [saving, setSaving] = useState(false)
   const saveStandardLoanRental = useCallback(
     async (values: TStandardLoanRental) => {
+      if (saving) return
       try {
         setSaving(true)
         const { calculatorId } = params as TCalculatorParams
@@ -49,7 +50,7 @@ const useStandardLoanRental = (params: TCalculatorTypeParams | TCalculatorParams
         setSaving(false)
       }
     },
-    [dispatch, params, reportId, scenarioId, type]
+    [dispatch, params, reportId, saving, scenarioId, type]
   )
 
   // const [deleting, setDeleting] = useState(false)
