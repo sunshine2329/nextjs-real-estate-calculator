@@ -9,7 +9,7 @@ const useCashBuyData = (values: TCashBuy): TCashBuyData =>
   useMemo(() => {
     const currentYear = new Date().getFullYear()
     const arr = Array.from(Array(30).keys())
-    const data = arr.map(i => getCashBuyCalculations(values, i))
+    const data = arr.map(i => getCashBuyCalculations({ ...values }, i))
     const chartOptions = (title: string) => ({
       responsive: true,
       plugins: {

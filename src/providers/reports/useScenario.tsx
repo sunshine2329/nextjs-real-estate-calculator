@@ -9,11 +9,13 @@ const useScenario = (params: TScenarioParams) => {
   const { scenarios, cash_buys, standard_loan_rentals } = useReportsState()
   const { scenario, cashBuy, standardLoanRental } = useMemo(() => {
     const scenario = scenarios[scenarioId]
-    const cashBuy = scenario && cash_buys[scenario.cash_buy]
-    const standardLoanRental = scenario && standard_loan_rentals[scenario.standard_loan_rental]
+    const cashBuy = scenario ? cash_buys[scenario.cash_buy] : undefined
+    const standardLoanRental = scenario
+      ? standard_loan_rentals[scenario.standard_loan_rental]
+      : undefined
     return { scenario, cashBuy, standardLoanRental }
   }, [cash_buys, scenarioId, scenarios, standard_loan_rentals])
-
+  console.log(cash_buys)
   return {
     scenario,
     cashBuy,

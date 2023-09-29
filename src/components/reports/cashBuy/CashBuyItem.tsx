@@ -6,12 +6,14 @@ import { ColumnDef, TCashBuyTableData } from '@/types'
 
 const CashBuyItem = ({
   reportId,
+  scenarioId,
   index,
   data,
   columns,
   getLeftStickyPos
 }: {
   reportId: string
+  scenarioId: string
   index: number
   data: TCashBuyTableData
   columns: ColumnDef<TCashBuyTableData>[]
@@ -20,7 +22,7 @@ const CashBuyItem = ({
   const router = useRouter()
   const handleClick = (e: { preventDefault: () => void }) => {
     e.preventDefault()
-    router.push(`/reports/${reportId}/scenarios/${data._id}`)
+    router.push(`/reports/${reportId}/scenarios/${scenarioId}`)
   }
   return (
     <tr key={index} className="text-left cursor-pointer" onClick={handleClick}>

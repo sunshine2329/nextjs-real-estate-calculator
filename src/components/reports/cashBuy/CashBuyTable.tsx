@@ -159,6 +159,7 @@ const CashBuyTable = ({ reportId, data = [] }: { reportId: string; data: TCashBu
               key={item._id}
               data={item}
               reportId={reportId}
+              scenarioId={item.scenarioId}
               index={index + 1}
               columns={columns}
               getLeftStickyPos={getLeftStickyPos}

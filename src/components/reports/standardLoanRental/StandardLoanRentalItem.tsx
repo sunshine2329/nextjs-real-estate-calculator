@@ -7,6 +7,7 @@ import { ColumnDef, TStandardLoanRentalTableData } from '@/types'
 
 const StandardLoanRentalItem = ({
   reportId,
+  scenarioId,
   index,
   data,
   columns,
@@ -66,7 +67,7 @@ const StandardLoanRentalItem = ({
   const router = useRouter()
   const handleClick = (e: { preventDefault: () => void }) => {
     e.preventDefault()
-    router.push(`/reports/${reportId}/scenarios/${data._id}`)
+    router.push(`/reports/${reportId}/scenarios/${scenarioId}`)
   }
   return (
     <tr key={index} className="text-left cursor-pointer" onClick={handleClick}>

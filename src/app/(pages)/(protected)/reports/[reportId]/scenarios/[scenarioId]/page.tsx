@@ -13,29 +13,34 @@ const ScenarioPage = ({ params }: { params: TScenarioParams }) => {
   useEffect(() => {
     mutate()
   }, [])
-  if (loading) {
+  if (loading && !scenario) {
     return <p>loading...</p>
   }
+  console.log(cashBuy)
   return (
     <ContainerWithPageTitle title={'Scenario'} toRedirect={`/reports/${params.reportId}`}>
       {!loading && !scenario && <p>No Data</p>}
       {!loading && scenario && <ScenarioName params={params} scenario={scenario} />}
-      <CalculatorTypes type={type} changeCalculator={setType} />
-      {type === 'cash_buy' && (
-        <CashBuyCalculator
-          reportId={params.reportId}
-          scenarioId={params.scenarioId}
-          calculatorId={cashBuy ? cashBuy._id : null}
-          initialValues={cashBuy}
-        />
-      )}
-      {type === 'standard_loan_rental' && (
-        <StandardLoanRentalCalculator
-          reportId={params.reportId}
-          scenarioId={params.scenarioId}
-          calculatorId={standardLoanRental ? standardLoanRental._id : null}
-          initialValues={standardLoanRental}
-        />
+      {scenario && (
+        <>
+          <CalculatorTypes type={type} changeCalculator={setType} />
+          {type === 'cash_buy' && (
+            <CashBuyCalculator
+              reportId={params.reportId}
+              scenarioId={params.scenarioId}
+              calculatorId={cashBuy ? cashBuy._id : null}
+              initialValues={cashBuy}
+            />
+          )}
+          {type === 'standard_loan_rental' && (
+            <StandardLoanRentalCalculator
+              reportId={params.reportId}
+              scenarioId={params.scenarioId}
+              calculatorId={standardLoanRental ? standardLoanRental._id : null}
+              initialValues={standardLoanRental}
+            />
+          )}
+        </>
       )}
     </ContainerWithPageTitle>
   )

@@ -22,6 +22,7 @@ export type TCashBuyCalculations = {
 
 export type TCashBuyTableData = TCashBuyCalculations &
   TCashBuy & {
+    scenarioId: string
     no: number
     name: string
   }

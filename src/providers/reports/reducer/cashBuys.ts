@@ -21,7 +21,7 @@ export const addCashBuy = (state: TReportsState, { type, payload }: TReportsActi
     const scenario = state.scenarios[params.scenarioId]
     return {
       ...state,
-      cash_buys: { ...state.cash_buys, [data.cash_buy._id]: data },
+      cash_buys: { ...state.cash_buys, [data.cash_buy._id]: data.cash_buy },
       scenarios: {
         ...state.scenarios,
         [params.scenarioId]: { ...scenario, cash_buy: data.cash_buy._id }

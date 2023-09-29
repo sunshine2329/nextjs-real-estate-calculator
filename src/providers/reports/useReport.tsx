@@ -27,8 +27,8 @@ const useReport = (params: TReportParams) => {
         const scenario = scenarios[scenarioId]
         if (scenario) {
           scenariosForReport.push(scenario)
-          cashBuys[scenario._id] = scenarios.cash_buy ? cash_buys[scenario.cash_buy] : null
-          standardLoanRentals[scenario._id] = scenarios.standard_loan_rental
+          cashBuys[scenario._id] = scenario.cash_buy ? cash_buys[scenario.cash_buy] : null
+          standardLoanRentals[scenario._id] = scenario.standard_loan_rental
             ? standard_loan_rentals[scenario.standard_loan_rental]
             : null
         }

@@ -24,10 +24,16 @@ const StandardLoanRentalReport = ({
     const data: TStandardLoanRentalTableData[] = []
     const finalValues: TStandardLoanRentalChartData[] = []
     scenarios.forEach((scenario: TScenario, index) => {
-      const standardLoanRental = standardLoanRentals[scenario.standard_loan_rental]
+      const standardLoanRental = standardLoanRentals[scenario._id]
       const calculations = getStandardLoanRentalCalculations(standardLoanRental)
       finalValues.push({ ...calculations, name: scenario.name })
-      data.push({ ...scenario, ...standardLoanRental, ...calculations, no: index })
+      data.push({
+        ...scenario,
+        ...standardLoanRental,
+        ...calculations,
+        no: index,
+        scenarioId: scenario._id
+      })
     })
     return { data, finalValues }
   }, [standardLoanRentals, scenarios])

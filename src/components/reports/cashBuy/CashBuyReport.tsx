@@ -15,10 +15,10 @@ const CashBuyReport = ({ reportId, scenarios, cashBuys }: TCashBuyReportProps) =
     const data: TCashBuyTableData[] = []
     const finalValues: TCashBuyChartData[] = []
     scenarios.forEach((scenario: TScenario, index) => {
-      const cashBuy = cashBuys[scenario.cash_buy]
+      const cashBuy = cashBuys[scenario._id]
       const calculations = getCashBuyCalculations(cashBuy)
       finalValues.push({ ...calculations, name: scenario.name })
-      data.push({ ...scenario, ...cashBuy, ...calculations, no: index })
+      data.push({ ...scenario, ...cashBuy, ...calculations, no: index, scenarioId: scenario._id })
     })
     return { data, finalValues }
   }, [cashBuys, scenarios])

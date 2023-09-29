@@ -53,7 +53,7 @@ const CashBuyCalculator = ({
     capital_rate,
     appreciation_rate
   } = values
-
+  console.log(values)
   const { chartData, netIncome, appreciation, rentalRateIncrease } = useCashBuyData(values)
   const { saving, saveCashBuy } = useCashBuy({
     reportId,

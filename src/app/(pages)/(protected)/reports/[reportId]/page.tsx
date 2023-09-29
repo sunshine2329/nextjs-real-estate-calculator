@@ -23,9 +23,6 @@ const ReportPage = ({ params: { reportId } }: { params: { reportId: string } }) 
     loading,
     mutate
   } = useReport({ reportId })
-  console.log(scenarios)
-  console.log(cashBuys)
-  console.log(standardLoanRentals)
   useEffect(() => {
     mutate()
   }, [])
@@ -37,7 +34,7 @@ const ReportPage = ({ params: { reportId } }: { params: { reportId: string } }) 
   )
   return (
     <ContainerWithPageTitle title="Report" actions={renderActions()} toRedirect="/reports">
-      {loading && <p>Loading...</p>}
+      {loading && !report && <p>Loading...</p>}
       {!loading && report && (
         <>
           <CalculatorSection title="Property Information" className="bg-transparent">

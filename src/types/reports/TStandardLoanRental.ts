@@ -47,6 +47,7 @@ export type TStandardLoanRentalCalculations = {
 
 export type TStandardLoanRentalTableData = TStandardLoanRentalCalculations &
   TStandardLoanRental & {
+    scenarioId: string
     no: number
     name: string
   }
