@@ -12,12 +12,13 @@ import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
-  BarElement,
+  LineElement,
+  PointElement,
   Title,
   Tooltip,
   Legend
 } from 'chart.js'
-import { Bar } from 'react-chartjs-2'
+import { Line } from 'react-chartjs-2'
 import defaultInitialValues from './defaultInitialValues'
 import useCashBuyData from './useCashBuyData'
 import { TScenarioParams, TCashBuy } from '@/types'
@@ -31,7 +32,7 @@ type TRenderInputProps = TCalculatorInputProps & {
   value: number
 }
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
+ChartJS.register(CategoryScale, LinearScale, LineElement, PointElement, Title, Tooltip, Legend)
 
 const CashBuyCalculator = ({
   reportId,
@@ -192,7 +193,7 @@ const CashBuyCalculator = ({
       </form>
       <div className="space-y-6 w-full">
         {chartData.map((values: any) => (
-          <Bar key={values.options.plugins.title.text} {...values} className="w-full" />
+          <Line key={values.options.plugins.title.text} {...values} className="w-full" />
         ))}
       </div>
     </>

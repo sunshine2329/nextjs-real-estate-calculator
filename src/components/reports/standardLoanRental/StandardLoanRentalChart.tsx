@@ -3,17 +3,18 @@ import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
-  BarElement,
+  LineElement,
+  PointElement,
   Title,
   Tooltip,
   Legend
 } from 'chart.js'
-import { Bar } from 'react-chartjs-2'
+import { Line } from 'react-chartjs-2'
 import { useMemo } from 'react'
 import { generateRandomColor } from '@/helpers'
 import { TStandardLoanRentalCalculations } from '@/types'
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
+ChartJS.register(CategoryScale, LinearScale, LineElement, PointElement, Title, Tooltip, Legend)
 
 const colors: string[] = []
 
@@ -56,7 +57,7 @@ const StandardLoanRentalChart = ({
     }
   }, [values])
 
-  return <Bar options={options} data={data} />
+  return <Line options={options} data={data} />
 }
 
 export default StandardLoanRentalChart

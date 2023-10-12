@@ -3,17 +3,18 @@ import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
-  BarElement,
+  LineElement,
+  PointElement,
   Title,
   Tooltip,
   Legend
 } from 'chart.js'
-import { Bar } from 'react-chartjs-2'
+import { Line } from 'react-chartjs-2'
 import { useMemo } from 'react'
 import { generateRandomColor } from '@/helpers'
 import { TCashBuyCalculations } from '@/types'
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
+ChartJS.register(CategoryScale, LinearScale, LineElement, PointElement, Title, Tooltip, Legend)
 
 const colors: string[] = []
 
@@ -32,9 +33,9 @@ export const options = {
 
 const CashBuyChart = ({ values = [] }: { values: (TCashBuyCalculations & { name: string })[] }) => {
   const data = useMemo(() => {
+    // disable-eslint
     if (colors.length < values.length) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      Array.from(Array(values.length - colors.length).keys()).forEach(_ =>
+      Array.from(Array(values.length - colors.length).keys()).forEach(() =>
         colors.push(generateRandomColor())
       )
     }
@@ -47,12 +48,14 @@ const CashBuyChart = ({ values = [] }: { values: (TCashBuyCalculations & { name:
       datasets: values.map(({ name, netIncome, appreciation, rentalRateIncrease }, index) => ({
         label: name,
         backgroundColor: colors[index],
+        bordercolor: colors[index], // set the  border color
+        fill: false, // required for line chart
         data: [netIncome, appreciation, rentalRateIncrease]
       }))
     }
   }, [values])
 
-  return <Bar options={options} data={data} />
+  return <Line options={options} data={data} />
 }
 
 export default CashBuyChart
